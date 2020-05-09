@@ -1,14 +1,13 @@
 CC = gcc
 CFLAGS = -W -Wall -Wextra
 
-default: test_vector
+default: driver
 
-vector.o: vector.c
+arraylist.o: arraylist.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-test_vector: test_vector.c vector.o
+driver: driver.c arraylist.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	$(RM) *.o test_vector
-
+	$(RM) *.o driver
