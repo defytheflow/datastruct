@@ -12,7 +12,7 @@ int main()
 
     for (int i = 0; i < 10; ++i) {
         int val = rand() % 101;
-        arraylist_push(al1, &val);
+        arraylist_push_back(al1, &val);
     }
 
     arraylist_info(al1);
