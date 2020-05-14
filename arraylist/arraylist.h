@@ -16,72 +16,75 @@ typedef struct {
     size_t data_size;
     size_t size;
     size_t capacity;
-    void(*free_func)(void*);
+    FreeFunc free_func;
     void*  buffer_ptr;
 } ArrayList;
 
 /* Constructor. */
-ArrayList* arraylist_new(size_t data_size, FreeFunc free_func);
+ArrayList* arraylist_new(size_t data_size, FreeFunc);
 
 /* Destructor. */
-void arraylist_del(ArrayList* al);
+void arraylist_del(ArrayList*);
 
-/* Getters. */
-size_t arraylist_data_size(const ArrayList* al);
+/* Fields. */
+size_t arraylist_data_size(const ArrayList*);
 
-size_t arraylist_size(const ArrayList* al);
+size_t arraylist_size(const ArrayList*);
 
-size_t arraylist_capacity(const ArrayList* al);
+size_t arraylist_capacity(const ArrayList*);
 
 /* State. */
-bool arraylist_is_empty(const ArrayList* al);
+bool arraylist_is_empty(const ArrayList*);
 
-bool arraylist_is_full(const ArrayList* al);
+bool arraylist_is_full(const ArrayList*);
 
-bool arraylist_is_sorted(const ArrayList* al, CmpFunc cmp_func);
+bool arraylist_is_sorted(const ArrayList*, CmpFunc);
 
 /* Index operator. */
-void* arraylist_get(const ArrayList* al, size_t pos);
+void* arraylist_get(const ArrayList*, size_t pos);
 
-void arraylist_set(ArrayList* al, size_t pos, const void* data_ptr);
+void arraylist_set(ArrayList*, size_t pos, const void* data_ptr);
 
 /* Concatenation operator. */
-ArrayList* arraylist_concat(ArrayList* al_dest, const ArrayList* al_src);
+ArrayList* arraylist_concat(ArrayList* dest, const ArrayList* src);
 
 /* Equals operator. */
-bool arraylist_equals(const ArrayList* al1, const ArrayList* al2, CmpFunc cmp_func);
+bool arraylist_equals(const ArrayList* al1, const ArrayList* al2, CmpFunc);
 
 /* Insertion. */
-void arraylist_push_back(ArrayList* al, const void* data_ptr);
+void arraylist_push_back(ArrayList*, const void* data_ptr);
 
-void arraylist_insert(ArrayList* al, size_t pos, const void* data_ptr);
+void arraylist_insert(ArrayList*, size_t pos, const void* data_ptr);
 
 /* Removal. */
-void* arraylist_pop(ArrayList* al);
+void* arraylist_pop(ArrayList*);
 
-void arraylist_erase(ArrayList* al, size_t pos);
+void arraylist_erase(ArrayList*, size_t pos);
 
-/* Searching. */
-int arraylist_lsearch(ArrayList* al, const void* needle, CmpFunc cmp_func);
+/* Search. */
+int arraylist_lsearch(const ArrayList*, const void* needle, CmpFunc);
 
-int arraylist_bsearch(ArrayList* al, const void* needle, CmpFunc cmp_func);
+int arraylist_bsearch(const ArrayList*, const void* needle, CmpFunc);
 
-/* Resizing. */
-ArrayList* arraylist_shrink_to_fit(ArrayList* al);
+/* Resize. */
+ArrayList* arraylist_resize(ArrayList*, size_t new_size);
 
-ArrayList* arraylist_resize(ArrayList* al, size_t new_size);
+ArrayList* arraylist_shrink_to_fit(ArrayList*);
 
-ArrayList* arraylist_clear(ArrayList* al);
+ArrayList* arraylist_clear(ArrayList*);
 
-/* Sorting. */
-ArrayList* arraylist_sort(ArrayList* al, CmpFunc cmp_func);
+/* Sort. */
+ArrayList* arraylist_sort(ArrayList*, CmpFunc);
 
-ArrayList* arraylist_reverse(ArrayList* al);
+/* Reverse. */
+ArrayList* arraylist_reverse(ArrayList*);
 
-/* Printing. */
-void arraylist_info(const ArrayList* al);
+/* Print. */
+void arraylist_print(const ArrayList*, PrintFunc);
 
-void arraylist_print(const ArrayList* al, PrintFunc print_func);
+void arraylist_info(const ArrayList*);
+
+// TODO foreach
 
 #ifdef __cplusplus
 }
