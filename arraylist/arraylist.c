@@ -58,6 +58,17 @@ bool arraylist_is_empty(const ArrayList* al) { return al->size == 0; }
 
 bool arraylist_is_full(const ArrayList* al) { return al->size == al->capacity; }
 
+bool arraylist_is_sorted(const ArrayList* al, int(*cmp_func)(const void*, const void*))
+{
+    for (size_t i = 0; i < al->size - 1; ++i) {
+        void* first_elem = arraylist_get(al, i);
+        void* second_elem = arraylist_get(al, i + 1);
+        if ((*cmp_func)(first_elem, second_elem) > 0)
+            return false;
+    }
+    return true;
+}
+
 /* Index operator. */
 void* arraylist_get(const ArrayList* al, size_t pos)
 {
@@ -69,6 +80,28 @@ void arraylist_set(ArrayList* al, size_t pos, const void* data_ptr)
 {
     ASSERT_INDEX_IS_VALID(al, pos);
     memcpy((char*)al->buffer_ptr + pos * al->data_size, data_ptr, al->data_size);
+}
+
+/* Concatenation operator. */
+ArrayList* arraylist_concat(ArrayList* al_dest, const ArrayList* al_src)
+{
+    for (size_t i = 0; i < al_src->size; ++i) {
+        arraylist_push_back(al_dest, arraylist_get(al_src, i));
+    }
+    return al_dest;
+}
+
+/* Equals operator. */
+bool arraylist_equals(const ArrayList* al1, const ArrayList* al2,
+                      int(*cmp_func)(const void*, const void*))
+{
+    if (al1->size != al2->size) return false;
+
+    for (size_t i = 0; i < al1->size; ++i) {
+        if ((*cmp_func)(arraylist_get(al1, i), arraylist_get(al2, i)))
+            return false;
+    }
+    return true;
 }
 
 /* Insertion. */
@@ -180,7 +213,7 @@ ArrayList* arraylist_clear(ArrayList* al)
 
 
 /* Sorting. */
-ArrayList* arraylist_sort(ArrayList* al, int(*compare_func)(const void*, const void*))
+ArrayList* arraylist_sort(ArrayList* al, int(*cmp_func)(const void*, const void*))
 {
     if (arraylist_is_empty(al) || al->size == 1) return al;
 
@@ -189,7 +222,7 @@ ArrayList* arraylist_sort(ArrayList* al, int(*compare_func)(const void*, const v
         for (size_t j = i + 1; j < al->size; ++j) {
             void* j_data_ptr = arraylist_get(al, j);
             void* min_index_data_ptr = arraylist_get(al, min_index);
-            if ((*compare_func)(j_data_ptr, min_index_data_ptr) < 0) {
+            if ((*cmp_func)(j_data_ptr, min_index_data_ptr) < 0) {
                 min_index = j;
             }
         }
@@ -230,15 +263,6 @@ void arraylist_print(const ArrayList* al, void(*print_func)(const void*))
         }
     }
     printf("]\n");
-}
-
-/* Other. */
-ArrayList* arraylist_concat(ArrayList* al_dest, const ArrayList* al_src)
-{
-    for (size_t i = 0; i < al_src->size; ++i) {
-        arraylist_push_back(al_dest, arraylist_get(al_src, i));
-    }
-    return al_dest;
 }
 
 /* Internal. */

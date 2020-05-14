@@ -33,10 +33,19 @@ bool arraylist_is_empty(const ArrayList* al);
 
 bool arraylist_is_full(const ArrayList* al);
 
+bool arraylist_is_sorted(const ArrayList* al, int(*cmp_func)(const void*, const void*));
+
 /* Index operator. */
 void* arraylist_get(const ArrayList* al, size_t pos);
 
 void arraylist_set(ArrayList* al, size_t pos, const void* data_ptr);
+
+/* Concatenation operator. */
+ArrayList* arraylist_concat(ArrayList* al_dest, const ArrayList* al_src);
+
+/* Equals operator. */
+bool arraylist_equals(const ArrayList* al1, const ArrayList* al2,
+                      int(*cmp_func)(const void*, const void*));
 
 /* Insertion. */
 void arraylist_push_back(ArrayList* al, const void* data_ptr);
@@ -63,7 +72,7 @@ ArrayList* arraylist_resize(ArrayList* al, size_t new_size);
 ArrayList* arraylist_clear(ArrayList* al);
 
 /* Sorting. */
-ArrayList* arraylist_sort(ArrayList* al, int(*compare_func)(const void*, const void*));
+ArrayList* arraylist_sort(ArrayList* al, int(*cmp_func)(const void*, const void*));
 
 ArrayList* arraylist_reverse(ArrayList* al);
 
@@ -71,9 +80,6 @@ ArrayList* arraylist_reverse(ArrayList* al);
 void arraylist_info(const ArrayList* al);
 
 void arraylist_print(const ArrayList* al, void(*print_func)(const void*));
-
-/* Other. */
-ArrayList* arraylist_concat(ArrayList* al_dest, const ArrayList* al_src);
 
 #ifdef __cplusplus
 }
