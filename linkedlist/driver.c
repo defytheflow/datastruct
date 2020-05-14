@@ -4,41 +4,52 @@
 #include <stdlib.h>
 #include <string.h>
 
-void print_int(const void* i);
-void print_str(const void* s);
+void int_print(const void*);
+void str_print(const void*);
 
-void str_free(void* s);
+void str_free(void*);
 
 int main()
 {
     LinkedList* ll = linkedlist_new(sizeof(char*), str_free);
 
-    const char *names[] = { "Jane", "David", "Kevin", "Michael", "Craig", "Jimi" };
+    const char* strings[] = {
+        "First",
+        "Second",
+        "Third",
+        "Fourth",
+        "Fifth",
+        "Sixth",
+    };
 
-    char *name;
-    for(int i = 0; i < sizeof(names) / sizeof(char*); ++i) {
-        name = strdup(names[i]);
-        linkedlist_push_back(ll, &name);
+    char *string;
+    for(size_t i = 0; i < 3; ++i) {
+        string = strdup(strings[i]);
+        linkedlist_push_back(ll, &string);
     }
 
-    linkedlist_print(ll, print_str);
+    for(size_t i = 3; i < 6; ++i) {
+        string = strdup(strings[i]);
+        linkedlist_push_front(ll, &string);
+    }
 
-    linkedlist_delete(ll);
+    linkedlist_print(ll, str_print);
 
-    return 0;
+    linkedlist_del(ll);
 }
 
-void print_int(const void* i)
+void int_print(const void* i)
 {
-    printf("%d", *(int*)i);
+    printf("%d", *(int*) i);
 }
 
-void print_str(const void* s)
+void str_print(const void* s)
 {
-    printf("'%s'", *(const char**)s);
+    printf("'%s'", *(const char**) s);
 }
 
 void str_free(void* s)
 {
-    free(*(char**)s);
+    free(*(char**) s);
+    free(s);
 }

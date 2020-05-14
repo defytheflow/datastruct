@@ -5,16 +5,15 @@
 #include <string.h>
 
 
-int int_cmp(const void* a_ptr, const void* b_ptr);
-void int_print(const void* i);
+int int_cmp(const void*, const void*);
+void int_print(const void*);
 
-void str_print(const void* s);
-void str_free(void* s);
+void str_print(const void*);
+void str_free(void*);
 
 int main()
 {
     ArrayList* al = arraylist_new(sizeof(int), NULL);
-
 
     arraylist_del(al);
 }
