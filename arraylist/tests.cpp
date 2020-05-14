@@ -12,39 +12,31 @@ int int_cmp(const void* a_ptr, const void* b_ptr);
 /* Constructor */
 TEST(ArrayListNewTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
     ASSERT_EQ(al->size, 0);
     ASSERT_EQ(al->capacity, INIT_CAPACITY);
     ASSERT_EQ(al->data_size, sizeof(int));
     arraylist_del(al);
 }
 
-/* Destructor */
-TEST(ArrayListDelTest, _)
-{
-    ArrayList* al = arraylist_new(sizeof(int));
-    arraylist_del(al);
-    ASSERT_EQ(al->buffer_ptr, (void*)NULL);
-}
-
 /* Getters */
 TEST(ArrayListDataSizeTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
     ASSERT_EQ(al->data_size, arraylist_data_size(al));
     arraylist_del(al);
 }
 
 TEST(ArrayListSizeTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
     ASSERT_EQ(al->size, arraylist_size(al));
     arraylist_del(al);
 }
 
 TEST(ArrayListCapacityTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
     ASSERT_EQ(al->capacity, arraylist_capacity(al));
     arraylist_del(al);
 }
@@ -52,7 +44,7 @@ TEST(ArrayListCapacityTest, _)
 /* State */
 TEST(ArrayListIsEmptyTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
     ASSERT_EQ(arraylist_is_empty(al), TRUE);
 
     int data = 42;
@@ -64,7 +56,7 @@ TEST(ArrayListIsEmptyTest, _)
 
 TEST(ArrayListIsFullTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     for (int i = 0; i < INIT_CAPACITY; ++i) {
         arraylist_push_back(al, &i);
@@ -77,7 +69,7 @@ TEST(ArrayListIsFullTest, _)
 
 TEST(ArrayListIsSortedTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     for (int i = 0; i < 100; ++i) {
         arraylist_push_back(al, &i);
@@ -96,7 +88,7 @@ TEST(ArrayListIsSortedTest, _)
 /* Index operator. */
 TEST(ArrayListGetTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     int data = 24;
     arraylist_push_back(al, &data);
@@ -108,7 +100,7 @@ TEST(ArrayListGetTest, _)
 
 TEST(ArrayListSetTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     int data = 24;
     arraylist_push_back(al, &data);
@@ -124,8 +116,8 @@ TEST(ArrayListSetTest, _)
 /* Concatenation operator. */
 TEST(ArrayListConcatTest, _)
 {
-    ArrayList* al1 = arraylist_new(sizeof(int));
-    ArrayList* al2 = arraylist_new(sizeof(int));
+    ArrayList* al1 = arraylist_new(sizeof(int), NULL);
+    ArrayList* al2 = arraylist_new(sizeof(int), NULL);
 
     int size = 10;
 
@@ -148,8 +140,8 @@ TEST(ArrayListConcatTest, _)
 /* Equals operator. */
 TEST(ArrayListEqualsTest, _)
 {
-    ArrayList* al1 = arraylist_new(sizeof(int));
-    ArrayList* al2 = arraylist_new(sizeof(int));
+    ArrayList* al1 = arraylist_new(sizeof(int), NULL);
+    ArrayList* al2 = arraylist_new(sizeof(int), NULL);
 
     for (int i = 0; i < 10; ++i) {
         arraylist_push_back(al1, &i);
@@ -170,7 +162,7 @@ TEST(ArrayListEqualsTest, _)
 /* Insertion. */
 TEST(ArrayListPushBackTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     int data = 24;
     arraylist_push_back(al, &data);
@@ -183,7 +175,7 @@ TEST(ArrayListPushBackTest, _)
 
 TEST(ArrayListInsertTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     int size = 10, data = 24;
 
@@ -202,7 +194,7 @@ TEST(ArrayListInsertTest, _)
 /* Removal. */
 TEST(ArrayListPopTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     int size = 10;
 
@@ -219,7 +211,7 @@ TEST(ArrayListPopTest, _)
 
 TEST(ArrayListEraseTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     int size = 10;
 
@@ -236,37 +228,37 @@ TEST(ArrayListEraseTest, _)
     arraylist_del(al);
 }
 
-TEST(ArrayListRemoveTest, _)
-{
-    ArrayList* al = arraylist_new(sizeof(int));
-
-    int size = 2, data = 1;
-
-    for (int i = 0; i < size; ++i) {
-        arraylist_push_back(al, &i);
-    }
-
-    arraylist_remove(al, &data);
-
-    ASSERT_EQ(arraylist_size(al), size - 1);
-
-    arraylist_del(al);
-}
-
 /* Searching. */
 TEST(ArrayListLsearchTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     for (int i = 0; i < 100; ++i) {
         arraylist_push_back(al, &i);
     }
 
     int exist_data = 85;
-    ASSERT_EQ(arraylist_lsearch(al, &exist_data), 85);
+    ASSERT_EQ(arraylist_lsearch(al, &exist_data, int_cmp), 85);
 
     int non_exist_data = 1000;
-    ASSERT_EQ(arraylist_lsearch(al, &non_exist_data), NOT_FOUND);
+    ASSERT_EQ(arraylist_lsearch(al, &non_exist_data, int_cmp), NOT_FOUND);
+
+    arraylist_del(al);
+}
+
+TEST(ArrayListBsearchTest, _)
+{
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
+
+    for (int i = 0; i < 100; ++i) {
+        arraylist_push_back(al, &i);
+    }
+
+    int exist_data = 85;
+    ASSERT_EQ(arraylist_bsearch(al, &exist_data, int_cmp), 85);
+
+    int non_exist_data = 1000;
+    ASSERT_EQ(arraylist_bsearch(al, &non_exist_data, int_cmp), NOT_FOUND);
 
     arraylist_del(al);
 }
@@ -274,7 +266,7 @@ TEST(ArrayListLsearchTest, _)
 /* Resizing. */
 TEST(ArrayListShrinkToFitTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     for (int i = 0; i < 100; ++i) {
         arraylist_push_back(al, &i);
@@ -288,7 +280,7 @@ TEST(ArrayListShrinkToFitTest, _)
 
 TEST(ArrayListResizeTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     for (int i = 0; i < 100; ++i) {
         arraylist_push_back(al, &i);
@@ -309,7 +301,7 @@ TEST(ArrayListResizeTest, _)
 
 TEST(ArrayListClearTest, _)
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
     for (int i = 0; i < 100; ++i) {
         arraylist_push_back(al, &i);
@@ -326,8 +318,8 @@ TEST(ArrayListClearTest, _)
 
 TEST(ArrayListSortTest, _)
 {
-    ArrayList* al1 = arraylist_new(sizeof(int));
-    ArrayList* al2 = arraylist_new(sizeof(int));
+    ArrayList* al1 = arraylist_new(sizeof(int), NULL);
+    ArrayList* al2 = arraylist_new(sizeof(int), NULL);
 
     for (int i = 0; i <= 100; ++i) {
         arraylist_push_back(al1, &i);
@@ -348,8 +340,8 @@ TEST(ArrayListSortTest, _)
 
 TEST(ArrayListReverseTest, _)
 {
-    ArrayList* al1 = arraylist_new(sizeof(int));
-    ArrayList* al2 = arraylist_new(sizeof(int));
+    ArrayList* al1 = arraylist_new(sizeof(int), NULL);
+    ArrayList* al2 = arraylist_new(sizeof(int), NULL);
 
     for (int i = 0; i <= 100; ++i) {
         arraylist_push_back(al1, &i);

@@ -2,20 +2,21 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 
 int int_cmp(const void* a_ptr, const void* b_ptr);
 void int_print(const void* i);
 
+void str_print(const void* s);
+void str_free(void* s);
+
 int main()
 {
-    ArrayList* al = arraylist_new(sizeof(int));
+    ArrayList* al = arraylist_new(sizeof(int), NULL);
 
-    for (int i = 0; i < 100; ++i) {
-        arraylist_push_back(al, &i);
-    }
 
-    arraylist_print(al, int_print);
-    printf("%d\n", arraylist_is_sorted(al, int_cmp));
+    arraylist_del(al);
 }
 
 int int_cmp(const void* a_ptr, const void* b_ptr)
@@ -31,4 +32,14 @@ int int_cmp(const void* a_ptr, const void* b_ptr)
 void int_print(const void* i)
 {
     printf("%d", *(int*)i);
+}
+
+void str_print(const void* s)
+{
+    printf("'%s'", *(char**)s);
+}
+
+void str_free(void* s)
+{
+    free(*(char**)s);
 }
