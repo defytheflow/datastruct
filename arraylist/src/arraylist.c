@@ -47,33 +47,7 @@ void arraylist_del(ArrayList* al)
     free(al);
 }
 
-/* Fields. */
-size_t arraylist_data_size(const ArrayList* al)
-{
-    return al->data_size;
-}
-
-size_t arraylist_size(const ArrayList* al)
-{
-    return al->size;
-}
-
-size_t arraylist_capacity(const ArrayList* al)
-{
-    return al->capacity;
-}
-
 /* State. */
-bool arraylist_is_empty(const ArrayList* al)
-{
-    return al->size == 0;
-}
-
-bool arraylist_is_full(const ArrayList* al)
-{
-    return al->size == al->capacity;
-}
-
 bool arraylist_is_sorted(const ArrayList* al, CmpFunc cmp_func)
 {
     for (size_t i = 0; i < al->size - 1; ++i) {

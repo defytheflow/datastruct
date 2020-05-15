@@ -1,20 +1,21 @@
 CC = gcc
-CPP = g++
 CFLAGS = -W -Wall -Wextra
-TEST_LIBS = -lgtest -lpthread
+TEST_LIBS = -lcheck -lm -lpthread -lrt -lsubunit
 
-# https://www.eriksmistad.no/getting-started-with-google-test-on-ubuntu/
+default: example
 
-default: driver
+example: example_arraylist
 
-arraylist.o: arraylist.c
+test: test_arraylist
+
+arraylist.o: src/arraylist.c
 	$(CC) -c $(CFLAGS) $^
 
-driver: driver.c arraylist.o
+example_arraylist: examples/example_arraylist.c arraylist.o
 	$(CC) $(CFLAGS) $^ -o $@
 
-tests: tests.cpp arraylist.o
-	$(CPP) $^ $(TEST_LIBS) -o $@
+test_arraylist: tests/test_arraylist.c arraylist.o
+	$(CC) $(CFLAGS) $^ $(TEST_LIBS) -o $@
 
 clean:
-	$(RM) *.o driver tests
+	$(RM) *.o *_arraylist
