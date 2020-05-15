@@ -20,7 +20,7 @@ static ArrayList* arraylist_shrink_buffer_by(ArrayList*, size_t n);
 static void swap(void*, void*, size_t);
 
 /* Constructor. */
-ArrayList* arraylist_new(size_t data_size, FreeFunc free_func)
+ArrayList* arraylist_init(size_t data_size, FreeFunc free_func)
 {
     ArrayList* al = (ArrayList*) malloc(sizeof(ArrayList));
     assert(al);
@@ -37,7 +37,7 @@ ArrayList* arraylist_new(size_t data_size, FreeFunc free_func)
 }
 
 /* Destructor. */
-void arraylist_del(ArrayList* al)
+void arraylist_free(ArrayList* al)
 {
     if (al->free_func) {
         for (size_t i = 0; i < al->size; ++i)

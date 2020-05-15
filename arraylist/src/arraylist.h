@@ -21,10 +21,10 @@ typedef struct {
 } ArrayList;
 
 /* Constructor. */
-ArrayList* arraylist_new(size_t data_size, FreeFunc);
+ArrayList* arraylist_init(size_t data_size, FreeFunc);
 
 /* Destructor. */
-void arraylist_del(ArrayList* al);
+void arraylist_free(ArrayList* al);
 
 /* Accessors. */
 static inline size_t arraylist_data_size(const ArrayList* al)
