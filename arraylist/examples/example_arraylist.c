@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 int int_cmp(const void*, const void*);
 void int_print(const void*);
 
@@ -13,9 +12,9 @@ void str_free(void*);
 
 int main()
 {
-    ArrayList* al = arraylist_new(sizeof(int), NULL);
+    ArrayList* al = arraylist_init(sizeof(int), NULL);
 
-    arraylist_del(al);
+    arraylist_free(al);
 }
 
 int int_cmp(const void* a_ptr, const void* b_ptr)
