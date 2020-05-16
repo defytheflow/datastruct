@@ -6,8 +6,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-static LLNode* ll_node_init(size_t data_size, const void* data_ptr);
-static void ll_node_free(LLNode*, FreeFunc);
+struct LLNode {
+    void* data_ptr;
+    struct LLNode* next;
+};
+
+static struct LLNode* ll_node_init(size_t data_size, const void* data_ptr);
+static void ll_node_free(struct LLNode*, FreeFunc);
 
 /* Constructor. */
 LinkedList* linkedlist_init(size_t data_size, FreeFunc free_func)
@@ -26,7 +31,7 @@ LinkedList* linkedlist_init(size_t data_size, FreeFunc free_func)
 /* Destructor. */
 void linkedlist_free(LinkedList* ll)
 {
-    LLNode *curr_node, *temp;
+    struct LLNode *curr_node, *temp;
 
     if (linkedlist_is_empty(ll)) {
         free(ll);
@@ -49,7 +54,7 @@ void* linkedlist_get(const LinkedList* ll, size_t pos)
 {
     assert(pos < ll->size);
 
-    LLNode* curr_node = ll->head;
+    struct LLNode* curr_node = ll->head;
 
     for (size_t i = 0; i < pos; ++i, curr_node = curr_node->next)
         ;
@@ -57,11 +62,11 @@ void* linkedlist_get(const LinkedList* ll, size_t pos)
     return curr_node->data_ptr;
 }
 
-void* linkedlist_set(const LinkedList* ll, size_t pos, const void* data_ptr)
+void linkedlist_set(const LinkedList* ll, size_t pos, const void* data_ptr)
 {
     assert(pos < ll->size);
 
-    LLNode* curr_node = ll->head;
+    struct LLNode* curr_node = ll->head;
 
     for (size_t i = 0; i < pos; ++i, curr_node = curr_node->next)
         ;
@@ -71,7 +76,7 @@ void* linkedlist_set(const LinkedList* ll, size_t pos, const void* data_ptr)
 
 void linkedlist_push_back(LinkedList* ll, const void* data_ptr)
 {
-    LLNode *new_node, *curr_node;
+    struct LLNode *new_node, *curr_node;
 
     new_node = ll_node_init(ll->data_size, data_ptr);
 
@@ -81,9 +86,8 @@ void linkedlist_push_back(LinkedList* ll, const void* data_ptr)
         return;
     }
 
-    for (curr_node = ll->head;
-         curr_node->next;
-         curr_node = curr_node->next);
+    for (curr_node = ll->head; curr_node->next; curr_node = curr_node->next)
+        ;
 
     curr_node->next = new_node;
     ++ll->size;
@@ -91,7 +95,7 @@ void linkedlist_push_back(LinkedList* ll, const void* data_ptr)
 
 void linkedlist_push_front(LinkedList* ll, const void* data_ptr)
 {
-    LLNode *new_node, *temp_node;
+    struct LLNode *new_node, *temp_node;
 
     new_node = ll_node_init(ll->data_size, data_ptr);
 
@@ -109,7 +113,7 @@ void linkedlist_push_front(LinkedList* ll, const void* data_ptr)
 
 /* void linkedlist_insert(LinkedList*, size_t pos, const void* data_ptr) */
 /* { */
-/*     LLNode *new_node, *temp_node; */
+/*     struct LLNode *new_node, *temp_node; */
 
 /*     new_node = ll_node_init(ll->data_size, data_ptr); */
 
@@ -117,7 +121,7 @@ void linkedlist_push_front(LinkedList* ll, const void* data_ptr)
 
 void linkedlist_print(const LinkedList* ll, PrintFunc print_func)
 {
-    LLNode* curr_node = ll->head;
+    struct LLNode* curr_node = ll->head;
 
     if (linkedlist_is_empty(ll)) {
         puts("[]");
@@ -134,9 +138,9 @@ void linkedlist_print(const LinkedList* ll, PrintFunc print_func)
     printf("]\n");
 }
 
-static LLNode* ll_node_init(size_t data_size, const void* data_ptr)
+static struct LLNode* ll_node_init(size_t data_size, const void* data_ptr)
 {
-    LLNode* new_node = malloc(sizeof(LLNode));
+    struct LLNode* new_node = malloc(sizeof(struct LLNode));
     assert(new_node);
 
     new_node->data_ptr = malloc(data_size);
@@ -148,7 +152,7 @@ static LLNode* ll_node_init(size_t data_size, const void* data_ptr)
     return new_node;
 }
 
-static void ll_node_free(LLNode* node, FreeFunc free_func)
+static void ll_node_free(struct LLNode* node, FreeFunc free_func)
 {
     if (free_func)
         free_func(node->data_ptr);
