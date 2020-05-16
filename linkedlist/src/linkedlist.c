@@ -14,7 +14,10 @@ struct LLNode {
 static struct LLNode* ll_node_init(size_t data_size, const void* data_ptr);
 static void ll_node_free(struct LLNode*, FreeFunc);
 
-/* Constructor. */
+/*
+ *                                Construction.
+ */
+
 LinkedList* linkedlist_init(size_t data_size, FreeFunc free_func)
 {
     LinkedList* ll = malloc(sizeof(LinkedList));
@@ -28,7 +31,10 @@ LinkedList* linkedlist_init(size_t data_size, FreeFunc free_func)
     return ll;
 }
 
-/* Destructor. */
+/*
+ *                                Destruction.
+ */
+
 void linkedlist_free(LinkedList* ll)
 {
     struct LLNode *curr_node, *temp;
@@ -50,9 +56,13 @@ void linkedlist_free(LinkedList* ll)
     free(ll);
 }
 
+/*
+ *                              Index Operator.
+ */
+
 void* linkedlist_get(const LinkedList* ll, size_t pos)
 {
-    assert(pos < ll->size);
+    assert(pos < linkedlist_size(ll));
 
     struct LLNode* curr_node = ll->head;
 
@@ -64,7 +74,7 @@ void* linkedlist_get(const LinkedList* ll, size_t pos)
 
 void linkedlist_set(const LinkedList* ll, size_t pos, const void* data_ptr)
 {
-    assert(pos < ll->size);
+    assert(pos < linkedlist_size(ll));
 
     struct LLNode* curr_node = ll->head;
 
@@ -73,6 +83,10 @@ void linkedlist_set(const LinkedList* ll, size_t pos, const void* data_ptr)
 
     memcpy(curr_node->data_ptr, data_ptr, ll->data_size);
 }
+
+/*
+ *                                 Insertion.
+ */
 
 void linkedlist_push_back(LinkedList* ll, const void* data_ptr)
 {
@@ -108,16 +122,38 @@ void linkedlist_push_front(LinkedList* ll, const void* data_ptr)
     temp_node = ll->head;
     ll->head = new_node;
     new_node->next = temp_node;
+
     ++ll->size;
 }
 
-/* void linkedlist_insert(LinkedList*, size_t pos, const void* data_ptr) */
-/* { */
-/*     struct LLNode *new_node, *temp_node; */
+void linkedlist_insert(LinkedList* ll, size_t pos, const void* data_ptr)
+{
+    assert(pos < linkedlist_size(ll));
 
-/*     new_node = ll_node_init(ll->data_size, data_ptr); */
+    struct LLNode *new_node, *curr_node, *temp_node;
 
-/* } */
+    new_node = ll_node_init(ll->data_size, data_ptr);
+    curr_node = ll->head;
+
+    for (size_t i = 0; i < pos - 1; ++i, curr_node = curr_node->next)
+        ;
+
+    temp_node = curr_node->next;
+    curr_node->next = new_node;
+    new_node->next = temp_node;
+
+    ++ll->size;
+}
+
+/*
+ *                                  Removal.
+ */
+
+// TODO.
+
+/*
+ *                                   Printing.
+ */
 
 void linkedlist_print(const LinkedList* ll, PrintFunc print_func)
 {
@@ -137,6 +173,10 @@ void linkedlist_print(const LinkedList* ll, PrintFunc print_func)
     }
     printf("]\n");
 }
+
+/*
+ *                                  Internal.
+ */
 
 static struct LLNode* ll_node_init(size_t data_size, const void* data_ptr)
 {

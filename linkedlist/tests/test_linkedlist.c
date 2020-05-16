@@ -7,6 +7,11 @@
 
 static size_t linkedlist_fill_with_strings(LinkedList* ll);
 
+
+/*
+ *                                Construction.
+ */
+
 START_TEST(test_linkedlist_init)
 {
     LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
@@ -19,6 +24,10 @@ START_TEST(test_linkedlist_init)
     linkedlist_free(ll);
 }
 END_TEST
+
+/*
+ *                              Field Accessing.
+ */
 
 START_TEST(test_linkedlist_data_size)
 {
@@ -36,6 +45,10 @@ START_TEST(test_linkedlist_size)
 }
 END_TEST
 
+/*
+ *                                   State.
+ */
+
 START_TEST(test_linkedlist_is_empty)
 {
     LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
@@ -47,6 +60,10 @@ START_TEST(test_linkedlist_is_empty)
     linkedlist_free(ll);
 }
 END_TEST
+
+/*
+ *                              Index Operator.
+ */
 
 START_TEST(test_linkedlist_get)
 {
@@ -76,16 +93,20 @@ START_TEST(test_linkedlist_set)
 }
 END_TEST
 
+/*
+ *                                 Insertion.
+ */
+
 START_TEST(test_linkedlist_push_back)
 {
     LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
 
-    size_t ll_size = linkedlist_fill_with_strings(ll);
+    size_t num_strings = linkedlist_fill_with_strings(ll);
 
     const char* data = "Data";
     linkedlist_push_back(ll, &data);
 
-    ck_assert_uint_eq(linkedlist_size(ll), ll_size + 1);
+    ck_assert_uint_eq(linkedlist_size(ll), num_strings + 1);
     ck_assert_str_eq(*(char**) linkedlist_get(ll, linkedlist_size(ll) - 1), data);
 
     linkedlist_free(ll);
@@ -96,35 +117,63 @@ START_TEST(test_linkedlist_push_front)
 {
     LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
 
-    size_t ll_size = linkedlist_fill_with_strings(ll);
+    size_t num_strings = linkedlist_fill_with_strings(ll);
 
     const char* data = "Data";
     linkedlist_push_front(ll, &data);
 
-    ck_assert_uint_eq(linkedlist_size(ll), ll_size + 1);
+    ck_assert_uint_eq(linkedlist_size(ll), num_strings + 1);
     ck_assert_str_eq(*(char**) linkedlist_get(ll, 0), data);
 
     linkedlist_free(ll);
 }
 END_TEST
 
+START_TEST(test_linkedlist_insert)
+{
+    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+
+    size_t num_strings = linkedlist_fill_with_strings(ll);
+
+    const char* data = "Data";
+    linkedlist_insert(ll, num_strings / 2, &data);
+
+    ck_assert_uint_eq(linkedlist_size(ll), num_strings + 1);
+    ck_assert_str_eq(*(char**) linkedlist_get(ll, num_strings / 2), data);
+
+    linkedlist_free(ll);
+}
+END_TEST
+
+/*
+ *                                  Removal.
+ */
+
 Suite *linkedlist_suite(void)
 {
     Suite* s = suite_create("LinkedList");
     TCase* tc_core = tcase_create("Core");
 
+    /* Construction. */
     tcase_add_test(tc_core, test_linkedlist_init);
 
+    /* Accessors. */
     tcase_add_test(tc_core, test_linkedlist_size);
     tcase_add_test(tc_core, test_linkedlist_data_size);
 
+    /* State. */
     tcase_add_test(tc_core, test_linkedlist_is_empty);
 
+    /* Index operator. */
     tcase_add_test(tc_core, test_linkedlist_get);
     tcase_add_test(tc_core, test_linkedlist_set);
 
+    /* Insertion. */
     tcase_add_test(tc_core, test_linkedlist_push_back);
     tcase_add_test(tc_core, test_linkedlist_push_front);
+    tcase_add_test(tc_core, test_linkedlist_insert);
+
+    /* Removal. */
 
     suite_add_tcase(s, tc_core);
 

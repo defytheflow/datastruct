@@ -23,13 +23,22 @@ typedef struct {
     LLNode* head;
 } LinkedList;
 
-/* Constructor. */
+/*
+ * Construction.
+ */
+
 LinkedList* linkedlist_init(size_t data_size, FreeFunc);
 
-/* Destructor. */
+/*
+ * Destruction.
+ */
+
 void linkedlist_free(LinkedList*);
 
-/* Accessors. */
+/*
+ * Field Accessing.
+ */
+
 static inline size_t linkedlist_data_size(const LinkedList* ll)
 {
     return ll->data_size;
@@ -45,17 +54,31 @@ static inline bool linkedlist_is_empty(const LinkedList* ll)
     return ll->head == NULL;
 }
 
-/* Index operator. */
+/*
+ * Index operator.
+ */
+
 void* linkedlist_get(const LinkedList* ll, size_t pos);
 
 void linkedlist_set(const LinkedList* ll, size_t pos, const void* data_ptr);
 
-/* Insert. */
+/*
+ * Insertion.
+ */
+
 void linkedlist_push_back(LinkedList* ll, const void* data_ptr);
 
 void linkedlist_push_front(LinkedList* ll, const void* data_ptr);
 
 void linkedlist_insert(LinkedList* ll, size_t pos, const void* data_ptr);
+
+/*
+ * Removal.
+ */
+
+/*
+ * Printing.
+ */
 
 void linkedlist_print(const LinkedList* ll, PrintFunc);
 
