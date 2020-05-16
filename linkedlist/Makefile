@@ -13,7 +13,7 @@ driver: driver.c linkedlist.o
 	$(CC) $(CFLAGS) $^ -o $@
 
 test_linkedlist: tests/test_linkedlist.c linkedlist.o
-	$(CPP) $^ $(TEST_LIBS) -o $@
+	$(CC) $^ $(TEST_LIBS) -o $@
 
 clean:
 	$(RM) *.o test_linkedlist driver

@@ -6,16 +6,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-static struct ll_node* ll_node_new(size_t data_size, const void* data_ptr);
-static void ll_node_del(struct ll_node*, FreeFunc);
+static LLNode* ll_node_init(size_t data_size, const void* data_ptr);
+static void ll_node_free(LLNode*, FreeFunc);
 
 /* Constructor. */
-LinkedList* linkedlist_new(size_t data_size, FreeFunc free_func)
+LinkedList* linkedlist_init(size_t data_size, FreeFunc free_func)
 {
     LinkedList* ll = malloc(sizeof(LinkedList));
     assert(ll);
 
     ll->data_size = data_size;
+    ll->size = 0;
     ll->free_func = (*free_func);
     ll->head = NULL;
 
@@ -23,39 +24,60 @@ LinkedList* linkedlist_new(size_t data_size, FreeFunc free_func)
 }
 
 /* Destructor. */
-void linkedlist_del(LinkedList* ll)
+void linkedlist_free(LinkedList* ll)
 {
-    struct ll_node *curr_node, *temp;
+    LLNode *curr_node, *temp;
+
+    if (linkedlist_is_empty(ll)) {
+        free(ll);
+        return;
+    }
 
     curr_node = ll->head;
 
     while (curr_node->next) {
         temp = curr_node->next;
-        ll_node_del(curr_node, ll->free_func);
+        ll_node_free(curr_node, ll->free_func);
         curr_node = temp;
     }
 
-    ll_node_del(curr_node, ll->free_func);
+    ll_node_free(curr_node, ll->free_func);
     free(ll);
 }
 
-/* State. */
-
-bool linkedlist_is_empty(const LinkedList* ll)
+void* linkedlist_get(const LinkedList* ll, size_t pos)
 {
-    return ll->head == NULL;
+    assert(pos < ll->size);
+
+    LLNode* curr_node = ll->head;
+
+    for (size_t i = 0; i < pos; ++i, curr_node = curr_node->next)
+        ;
+
+    return curr_node->data_ptr;
 }
 
-/* Insert. */
+void* linkedlist_set(const LinkedList* ll, size_t pos, const void* data_ptr)
+{
+    assert(pos < ll->size);
+
+    LLNode* curr_node = ll->head;
+
+    for (size_t i = 0; i < pos; ++i, curr_node = curr_node->next)
+        ;
+
+    memcpy(curr_node->data_ptr, data_ptr, ll->data_size);
+}
 
 void linkedlist_push_back(LinkedList* ll, const void* data_ptr)
 {
-    struct ll_node *new_node, *curr_node;
+    LLNode *new_node, *curr_node;
 
-    new_node = ll_node_new(ll->data_size, data_ptr);
+    new_node = ll_node_init(ll->data_size, data_ptr);
 
     if (linkedlist_is_empty(ll)) {
         ll->head = new_node;
+        ++ll->size;
         return;
     }
 
@@ -64,37 +86,38 @@ void linkedlist_push_back(LinkedList* ll, const void* data_ptr)
          curr_node = curr_node->next);
 
     curr_node->next = new_node;
+    ++ll->size;
 }
 
 void linkedlist_push_front(LinkedList* ll, const void* data_ptr)
 {
-    struct ll_node *new_node, *temp_node;
+    LLNode *new_node, *temp_node;
 
-    new_node = ll_node_new(ll->data_size, data_ptr);
+    new_node = ll_node_init(ll->data_size, data_ptr);
 
     if (linkedlist_is_empty(ll)) {
         ll->head = new_node;
+        ++ll->size;
         return;
     }
 
     temp_node = ll->head;
     ll->head = new_node;
     new_node->next = temp_node;
+    ++ll->size;
 }
 
 /* void linkedlist_insert(LinkedList*, size_t pos, const void* data_ptr) */
 /* { */
-/*     struct ll_node *new_node, *temp_node; */
+/*     LLNode *new_node, *temp_node; */
 
-/*     new_node = ll_node_new(ll->data_size, data_ptr); */
+/*     new_node = ll_node_init(ll->data_size, data_ptr); */
 
 /* } */
 
-/* Print. */
-
 void linkedlist_print(const LinkedList* ll, PrintFunc print_func)
 {
-    struct ll_node* curr_node = ll->head;
+    LLNode* curr_node = ll->head;
 
     if (linkedlist_is_empty(ll)) {
         puts("[]");
@@ -111,11 +134,9 @@ void linkedlist_print(const LinkedList* ll, PrintFunc print_func)
     printf("]\n");
 }
 
-/* Internal. */
-
-static struct ll_node* ll_node_new(size_t data_size, const void* data_ptr)
+static LLNode* ll_node_init(size_t data_size, const void* data_ptr)
 {
-    struct ll_node* new_node = malloc(sizeof(struct ll_node));
+    LLNode* new_node = malloc(sizeof(LLNode));
     assert(new_node);
 
     new_node->data_ptr = malloc(data_size);
@@ -127,8 +148,11 @@ static struct ll_node* ll_node_new(size_t data_size, const void* data_ptr)
     return new_node;
 }
 
-static void ll_node_del(struct ll_node* node, FreeFunc free_func)
+static void ll_node_free(LLNode* node, FreeFunc free_func)
 {
-    free_func(node->data_ptr);
+    if (free_func)
+        free_func(node->data_ptr);
+    else
+        free(node->data_ptr);
     free(node);
 }
