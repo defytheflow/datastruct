@@ -57,7 +57,7 @@ void linkedlist_free(LinkedList* ll)
 }
 
 /*
- *                              Index Operator.
+ *                                  Indexing.
  */
 
 void* linkedlist_get(const LinkedList* ll, size_t pos)

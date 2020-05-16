@@ -12,7 +12,10 @@ static void arraylist_fill_up_to(ArrayList* al, int limit);
 
 static int int_cmp(const void*, const void*);
 
-/* Constructor. */
+/*
+ *                                Construction.
+ */
+
 START_TEST(test_arraylist_init)
 {
     ArrayList* al = arraylist_init(sizeof(int), NULL);
@@ -26,7 +29,10 @@ START_TEST(test_arraylist_init)
 }
 END_TEST
 
-/* Accesors. */
+/*
+ *                              Field Accessing.
+ */
+
 START_TEST(test_arraylist_data_size)
 {
     ArrayList* al = arraylist_init(sizeof(int), NULL);
@@ -50,6 +56,10 @@ START_TEST(test_arraylist_capacity)
     arraylist_free(al);
 }
 END_TEST
+
+/*
+ *                                   State.
+ */
 
 START_TEST(test_arraylist_is_empty)
 {
@@ -85,7 +95,10 @@ START_TEST(test_arraylist_is_sorted)
 }
 END_TEST
 
-/* Index operator. */
+/*
+ *                                  Indexing.
+ */
+
 START_TEST(test_arraylist_get)
 {
     ArrayList* al = arraylist_init(sizeof(int), NULL);
@@ -115,7 +128,10 @@ START_TEST(test_arraylist_set)
 }
 END_TEST
 
-/* Concatenation operator. */
+/*
+ *                               Concatenation.
+ */
+
 START_TEST(test_arraylist_concat)
 {
     ArrayList* al1 = arraylist_init(sizeof(int), NULL);
@@ -135,7 +151,10 @@ START_TEST(test_arraylist_concat)
 }
 END_TEST
 
-/* Equals operator. */
+/*
+ *                                  Equality.
+ */
+
 START_TEST(test_arraylist_equals)
 {
     ArrayList* al1 = arraylist_init(sizeof(int), NULL);
@@ -156,7 +175,10 @@ START_TEST(test_arraylist_equals)
 }
 END_TEST
 
-/* Insert. */
+/*
+ *                                 Insertion.
+ */
+
 START_TEST(test_arraylist_push_back)
 {
     ArrayList* al = arraylist_init(sizeof(int), NULL);
@@ -187,7 +209,9 @@ START_TEST(test_arraylist_insert)
 }
 END_TEST
 
-/* Remove. */
+/*
+ *                                  Removal.
+ */
 
 START_TEST(test_arraylist_pop)
 {
@@ -218,41 +242,9 @@ START_TEST(test_arraylist_erase)
 }
 END_TEST
 
-/* Search. */
-
-START_TEST(test_arraylist_lsearch)
-{
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
-
-    arraylist_fill_up_to(al, SIZE);
-
-    int exist_data = 85;
-    ck_assert_int_eq(arraylist_lsearch(al, &exist_data, int_cmp), 85);
-
-    int non_exist_data = 1000;
-    ck_assert_int_eq(arraylist_lsearch(al, &non_exist_data, int_cmp), NOT_FOUND);
-
-    arraylist_free(al);
-}
-END_TEST
-
-START_TEST(test_arraylist_bsearch)
-{
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
-
-    arraylist_fill_up_to(al, 100);
-
-    int exist_data = 85;
-    ck_assert_int_eq(arraylist_bsearch(al, &exist_data, int_cmp), 85);
-
-    int non_exist_data = 1000;
-    ck_assert_int_eq(arraylist_bsearch(al, &non_exist_data, int_cmp), NOT_FOUND);
-
-    arraylist_free(al);
-}
-END_TEST
-
-/* Resize. */
+/*
+ *                                   Resize.
+ */
 
 START_TEST(test_arraylist_resize)
 {
@@ -299,29 +291,10 @@ START_TEST(test_arraylist_clear)
 }
 END_TEST
 
-/* Sort. */
-START_TEST(test_arraylist_sort)
-{
-    ArrayList* al1 = arraylist_init(sizeof(int), NULL);
-    ArrayList* al2 = arraylist_init(sizeof(int), NULL);
+/*
+ *                                 Reversion.
+ */
 
-    for (int i = 0; i <= SIZE; ++i)
-        arraylist_push_back(al1, &i);
-
-    for (int i = SIZE; i >= 0; --i)
-        arraylist_push_back(al2, &i);
-
-    al2 = arraylist_sort(al2, int_cmp);
-
-    ck_assert_int_eq(arraylist_equals(al1, al2, int_cmp), true);
-    ck_assert_int_eq(arraylist_is_sorted(al1, int_cmp), true);
-
-    arraylist_free(al1);
-    arraylist_free(al2);
-}
-END_TEST
-
-/* Reverse. */
 START_TEST(test_arraylist_reverse)
 {
     ArrayList* al1 = arraylist_init(sizeof(int), NULL);
@@ -347,36 +320,41 @@ Suite *arraylist_suite(void)
     Suite* s = suite_create("ArrayList");
     TCase* tc_core = tcase_create("Core");
 
+    /* Construction. */
     tcase_add_test(tc_core, test_arraylist_init);
 
+    /* Field accessing. */
     tcase_add_test(tc_core, test_arraylist_data_size);
     tcase_add_test(tc_core, test_arraylist_size);
     tcase_add_test(tc_core, test_arraylist_capacity);
 
+    /* State. */
     tcase_add_test(tc_core, test_arraylist_is_empty);
     tcase_add_test(tc_core, test_arraylist_is_full);
     tcase_add_test(tc_core, test_arraylist_is_sorted);
 
+    /* Indexing. */
     tcase_add_test(tc_core, test_arraylist_get);
     tcase_add_test(tc_core, test_arraylist_set);
 
+    /* Concatenation. */
     tcase_add_test(tc_core, test_arraylist_concat);
+
+    /* Equality. */
     tcase_add_test(tc_core, test_arraylist_equals);
 
+    /* Insertion. */
     tcase_add_test(tc_core, test_arraylist_push_back);
     tcase_add_test(tc_core, test_arraylist_insert);
 
+    /* Removal. */
     tcase_add_test(tc_core, test_arraylist_pop);
     tcase_add_test(tc_core, test_arraylist_erase);
-
-    tcase_add_test(tc_core, test_arraylist_lsearch);
-    tcase_add_test(tc_core, test_arraylist_bsearch);
 
     tcase_add_test(tc_core, test_arraylist_resize);
     tcase_add_test(tc_core, test_arraylist_shrink_to_fit);
     tcase_add_test(tc_core, test_arraylist_clear);
 
-    tcase_add_test(tc_core, test_arraylist_sort);
     tcase_add_test(tc_core, test_arraylist_reverse);
 
     suite_add_tcase(s, tc_core);

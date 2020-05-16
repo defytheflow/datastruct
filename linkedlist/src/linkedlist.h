@@ -49,13 +49,17 @@ static inline size_t linkedlist_size(const LinkedList* ll)
     return ll->size;
 }
 
+/*
+ * State.
+ */
+
 static inline bool linkedlist_is_empty(const LinkedList* ll)
 {
     return ll->head == NULL;
 }
 
 /*
- * Index operator.
+ * Indexing.
  */
 
 void* linkedlist_get(const LinkedList* ll, size_t pos);
@@ -75,6 +79,8 @@ void linkedlist_insert(LinkedList* ll, size_t pos, const void* data_ptr);
 /*
  * Removal.
  */
+
+// TODO.
 
 /*
  * Printing.

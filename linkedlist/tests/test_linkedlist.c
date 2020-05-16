@@ -62,7 +62,7 @@ START_TEST(test_linkedlist_is_empty)
 END_TEST
 
 /*
- *                              Index Operator.
+ *                                  Indexing.
  */
 
 START_TEST(test_linkedlist_get)
@@ -157,14 +157,14 @@ Suite *linkedlist_suite(void)
     /* Construction. */
     tcase_add_test(tc_core, test_linkedlist_init);
 
-    /* Accessors. */
+    /* Field accessing. */
     tcase_add_test(tc_core, test_linkedlist_size);
     tcase_add_test(tc_core, test_linkedlist_data_size);
 
     /* State. */
     tcase_add_test(tc_core, test_linkedlist_is_empty);
 
-    /* Index operator. */
+    /* Indexing. */
     tcase_add_test(tc_core, test_linkedlist_get);
     tcase_add_test(tc_core, test_linkedlist_set);
 

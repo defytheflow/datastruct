@@ -9,7 +9,9 @@ extern "C" {
 #endif
 
 typedef void(*FreeFunc)(void*);
+
 typedef int(*CmpFunc)(const void*, const void*);
+
 typedef void(*PrintFunc)(const void*);
 
 typedef struct {
@@ -20,13 +22,22 @@ typedef struct {
     void*  buffer_ptr;
 } ArrayList;
 
-/* Constructor. */
+/*
+ * Construction.
+ */
+
 ArrayList* arraylist_init(size_t data_size, FreeFunc);
 
-/* Destructor. */
+/*
+ * Destruction.
+ */
+
 void arraylist_free(ArrayList* al);
 
-/* Accessors. */
+/*
+ * Field Accessing.
+ */
+
 static inline size_t arraylist_data_size(const ArrayList* al)
 {
     return al->data_size;
@@ -42,6 +53,12 @@ static inline size_t arraylist_capacity(const ArrayList* al)
     return al->capacity;
 }
 
+// TODO add buffer_ptr access (for qsort, lsearch, e.c.).
+
+/*
+ * State.
+ */
+
 static inline bool arraylist_is_empty(const ArrayList* al)
 {
     return al->size == 0;
@@ -54,46 +71,64 @@ static inline bool arraylist_is_full(const ArrayList* al)
 
 bool arraylist_is_sorted(const ArrayList* al, CmpFunc);
 
-/* Index operator. */
+
+/*
+ * Indexing.
+ */
+
 void* arraylist_get(const ArrayList* al, size_t pos);
 
 void arraylist_set(ArrayList* al, size_t pos, const void* data_ptr);
 
-/* Concatenation operator. */
+
+/*
+ * Concatenation.
+ */
+
 ArrayList* arraylist_concat(ArrayList* dest, const ArrayList* src);
 
-/* Equals operator. */
+/*
+ * Equality.
+ */
+
 bool arraylist_equals(const ArrayList* al1, const ArrayList* al2, CmpFunc);
 
-/* Insertion. */
+/*
+ * Insertion.
+ */
+
 void arraylist_push_back(ArrayList* al, const void* data_ptr);
 
 void arraylist_insert(ArrayList* al, size_t pos, const void* data_ptr);
 
-/* Removal. */
+/*
+ * Removal.
+ */
+
 void* arraylist_pop(ArrayList* al);
 
 void arraylist_erase(ArrayList* al, size_t pos);
 
-/* Search. */
-int arraylist_lsearch(const ArrayList* al, const void* needle, CmpFunc);
+/*
+ * Resize.
+ */
 
-int arraylist_bsearch(const ArrayList* al, const void* needle, CmpFunc);
-
-/* Resize. */
 ArrayList* arraylist_resize(ArrayList* al, size_t new_size);
 
 ArrayList* arraylist_shrink_to_fit(ArrayList* al);
 
 ArrayList* arraylist_clear(ArrayList* al);
 
-/* Sort. */
-ArrayList* arraylist_sort(ArrayList* al, CmpFunc);
+/*
+ * Reversion.
+ */
 
-/* Reverse. */
 ArrayList* arraylist_reverse(ArrayList* al);
 
-/* Print. */
+/*
+ * Printing.
+ */
+
 void arraylist_print(const ArrayList* al, PrintFunc);
 
 void arraylist_info(const ArrayList* al);

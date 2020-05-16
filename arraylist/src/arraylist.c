@@ -19,7 +19,10 @@ static ArrayList* arraylist_shrink_buffer_by(ArrayList*, size_t n);
 
 static void swap(void*, void*, size_t);
 
-/* Constructor. */
+/*
+ *                                Construction.
+ */
+
 ArrayList* arraylist_init(size_t data_size, FreeFunc free_func)
 {
     ArrayList* al = (ArrayList*) malloc(sizeof(ArrayList));
@@ -36,7 +39,10 @@ ArrayList* arraylist_init(size_t data_size, FreeFunc free_func)
     return al;
 }
 
-/* Destructor. */
+/*
+ *                                Destruction.
+ */
+
 void arraylist_free(ArrayList* al)
 {
     if (al->free_func) {
@@ -47,7 +53,10 @@ void arraylist_free(ArrayList* al)
     free(al);
 }
 
-/* Accessor. */
+/*
+ *                                   State.
+ */
+
 bool arraylist_is_sorted(const ArrayList* al, CmpFunc cmp_func)
 {
     for (size_t i = 0; i < al->size - 1; ++i) {
@@ -58,7 +67,10 @@ bool arraylist_is_sorted(const ArrayList* al, CmpFunc cmp_func)
     return true;
 }
 
-/* Index operator. */
+/*
+ *                                  Indexing.
+ */
+
 void* arraylist_get(const ArrayList* al, size_t pos)
 {
     assert(pos < al->size);
@@ -71,7 +83,10 @@ void arraylist_set(ArrayList* al, size_t pos, const void* data_ptr)
     memcpy((char*) al->buffer_ptr + pos * al->data_size, data_ptr, al->data_size);
 }
 
-/* Concatenation operator. */
+/*
+ *                               Concatenation.
+ */
+
 ArrayList* arraylist_concat(ArrayList* dest, const ArrayList* src)
 {
     for (size_t i = 0; i < src->size; ++i)
@@ -79,7 +94,10 @@ ArrayList* arraylist_concat(ArrayList* dest, const ArrayList* src)
     return dest;
 }
 
-/* Equals operator. */
+/*
+ *                                  Equality.
+ */
+
 bool arraylist_equals(const ArrayList* al1, const ArrayList* al2, CmpFunc cmp_func)
 {
     if (al1->size != al2->size) return false;
@@ -92,7 +110,10 @@ bool arraylist_equals(const ArrayList* al1, const ArrayList* al2, CmpFunc cmp_fu
     return true;
 }
 
-/* Insertion. */
+/*
+ *                                 Insertion.
+ */
+
 void arraylist_push_back(ArrayList* al, const void* data_ptr)
 {
     if (arraylist_is_full(al))
@@ -115,7 +136,10 @@ void arraylist_insert(ArrayList* al, size_t pos, const void* data_ptr)
     ++al->size;
 }
 
-/* Removal. */
+/*
+ *                                  Removal.
+ */
+
 void* arraylist_pop(ArrayList* al)
 {
     assert(!(arraylist_is_empty(al)));
@@ -132,40 +156,10 @@ void arraylist_erase(ArrayList* al, size_t pos)
     --al->size;
 }
 
-/* Search. */
-int arraylist_lsearch(const ArrayList* al, const void* needle, CmpFunc cmp_func)
-{
-    for (size_t i = 0; i < al->size; ++i) {
-        if (!(*cmp_func)(arraylist_get_internal(al, i), needle))
-            return i;
-    }
-    return NOT_FOUND;
-}
+/*
+ *                                   Resize.
+ */
 
-int arraylist_bsearch(const ArrayList* al, const void* needle, CmpFunc cmp_func)
-{
-    size_t begin, middle, end;
-    int cmp_res;
-
-    begin = 0;
-    end = al->size;
-
-    while (begin <= end) {
-        middle = (begin + end) / 2;
-        cmp_res = (*cmp_func)(arraylist_get_internal(al, middle), needle);
-
-        if (!cmp_res)
-            return middle;
-        else if (cmp_res < 1)
-            begin = middle + 1;
-        else
-            end = middle - 1;
-    }
-
-    return NOT_FOUND;
-}
-
-/* Resize. */
 ArrayList* arraylist_resize(ArrayList* al, size_t new_size)
 {
     return (al->capacity < new_size) ?
@@ -192,30 +186,10 @@ ArrayList* arraylist_clear(ArrayList* al)
     return arraylist_resize(al, INIT_CAPACITY);
 }
 
-/* Sort. */
-ArrayList* arraylist_sort(ArrayList* al, CmpFunc cmp_func)
-{
-    size_t i, j, min;
+/*
+ *                                 Reversion.
+ */
 
-    if (arraylist_is_empty(al) || al->size == 1)
-        return al;
-
-    for (i = 0; i < al->size; ++i) {
-        min = i;
-        for (j = i + 1; j < al->size; ++j) {
-            if((*cmp_func)(arraylist_get_internal(al, j),
-                           arraylist_get_internal(al, min)) < 0)
-                min = j;
-        }
-        swap(arraylist_get_internal(al, i),
-             arraylist_get_internal(al, min),
-             al->data_size);
-    }
-
-    return al;
-}
-
-/* Reverse. */
 ArrayList* arraylist_reverse(ArrayList* al)
 {
     for (size_t i = 0; i < al->size / 2; ++i)
@@ -225,7 +199,10 @@ ArrayList* arraylist_reverse(ArrayList* al)
     return al;
 }
 
-/* Print. */
+/*
+ *                                   Printing.
+ */
+
 void arraylist_info(const ArrayList* al)
 {
     const char* format = "%10s - %2d\n";
@@ -250,7 +227,10 @@ void arraylist_print(const ArrayList* al, PrintFunc print_func)
     printf("]\n");
 }
 
-/* Internal. */
+/*
+ *                                  Internal.
+ */
+
 static void arraylist_set_internal(ArrayList* al, size_t pos, const void* data_ptr)
 {
     memcpy((char*) al->buffer_ptr + pos * al->data_size, data_ptr, al->data_size);
