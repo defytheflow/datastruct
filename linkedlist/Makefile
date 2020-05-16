@@ -1,18 +1,19 @@
 CC = gcc
-CPP = g++
 CFLAGS = -W -Wall -Wextra
-TEST_LIBS = -lgtest -lpthread
+TEST_LIBS = -lcheck -lm -lpthread -lrt -lsubunit
 
 default: driver
 
-linkedlist.o: linkedlist.c
+test: test_linkedlist
+
+linkedlist.o: src/linkedlist.c
 	$(CC) -c $(CFLAGS) $^
 
 driver: driver.c linkedlist.o
 	$(CC) $(CFLAGS) $^ -o $@
 
-tests: tests.cpp linkedlist.o
+test_linkedlist: tests/test_linkedlist.c linkedlist.o
 	$(CPP) $^ $(TEST_LIBS) -o $@
 
 clean:
-	$(RM) *.o driver tests
+	$(RM) *.o test_linkedlist driver

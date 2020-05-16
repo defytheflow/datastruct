@@ -98,8 +98,6 @@ void arraylist_print(const ArrayList* al, PrintFunc);
 
 void arraylist_info(const ArrayList* al);
 
-// TODO foreach
-
 #ifdef __cplusplus
 }
 #endif

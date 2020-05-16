@@ -1,4 +1,4 @@
-#include "linkedlist.h"
+#include "../src/linkedlist.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -82,13 +82,13 @@ void linkedlist_push_front(LinkedList* ll, const void* data_ptr)
     new_node->next = temp_node;
 }
 
-void linkedlist_insert(LinkedList*, size_t pos, const void* data_ptr)
-{
-    struct ll_node *new_node, *temp_node;
+/* void linkedlist_insert(LinkedList*, size_t pos, const void* data_ptr) */
+/* { */
+/*     struct ll_node *new_node, *temp_node; */
 
-    new_node = ll_node_new(ll->data_size, data_ptr);
+/*     new_node = ll_node_new(ll->data_size, data_ptr); */
 
-}
+/* } */
 
 /* Print. */
 

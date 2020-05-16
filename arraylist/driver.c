@@ -1,4 +1,4 @@
-#include "../src/arraylist.h"
+#include "src/arraylist.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +8,6 @@ int int_cmp(const void*, const void*);
 void int_print(const void*);
 
 void str_print(const void*);
-void str_free(void*);
 
 int main()
 {
@@ -35,9 +34,4 @@ void int_print(const void* i)
 void str_print(const void* s)
 {
     printf("'%s'", *(char**)s);
-}
-
-void str_free(void* s)
-{
-    free(*(char**)s);
 }

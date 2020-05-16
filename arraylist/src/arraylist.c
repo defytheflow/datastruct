@@ -47,7 +47,7 @@ void arraylist_free(ArrayList* al)
     free(al);
 }
 
-/* State. */
+/* Accessor. */
 bool arraylist_is_sorted(const ArrayList* al, CmpFunc cmp_func)
 {
     for (size_t i = 0; i < al->size - 1; ++i) {
@@ -122,7 +122,6 @@ void* arraylist_pop(ArrayList* al)
     return arraylist_get_internal(al, --al->size);
 }
 
-
 void arraylist_erase(ArrayList* al, size_t pos)
 {
     assert(pos < al->size);
@@ -192,7 +191,6 @@ ArrayList* arraylist_clear(ArrayList* al)
     al->size = 0;
     return arraylist_resize(al, INIT_CAPACITY);
 }
-
 
 /* Sort. */
 ArrayList* arraylist_sort(ArrayList* al, CmpFunc cmp_func)
