@@ -4,16 +4,16 @@ TEST_LIBS = -lcheck -lm -lpthread -lrt -lsubunit
 
 default: driver
 
-test: test_linkedlist
+test: test_list
 
-linkedlist.o: src/linkedlist.c
+list.o: src/list.c
 	$(CC) -c $(CFLAGS) $^
 
-driver: driver.c linkedlist.o
+driver: driver.c list.o
 	$(CC) $(CFLAGS) $^ -o $@
 
-test_linkedlist: tests/test_linkedlist.c linkedlist.o
+test_list: tests/test_list.c list.o
 	$(CC) $^ $(TEST_LIBS) -o $@
 
 clean:
-	$(RM) *.o test_linkedlist driver
+	$(RM) *.o test_list driver

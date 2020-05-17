@@ -1,4 +1,4 @@
-#include "src/linkedlist.h"
+#include "src/list.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,8 +10,8 @@ void str_free(void*);
 
 int main()
 {
-    LinkedList list;
-    linkedlist_create(&list, sizeof(char*), str_free);
+    List list;
+    list_create(&list, sizeof(char*), str_free);
 
     const char* strings[] = {
         "First",
@@ -26,17 +26,17 @@ int main()
 
     for(size_t i = 0; i < sizeof(strings) / sizeof(strings[0]); ++i) {
         string = strdup(strings[i]);
-        linkedlist_push_back(&list, &string);
+        list_push_back(&list, &string);
     }
 
-    linkedlist_print(&list, str_print);
+    list_print(&list, str_print);
     /* char buffer[256]; */
 
-    /* linkedlist_pop_back(&list, buffer); */
+    /* list_pop_back(&list, buffer); */
 
-    /* char* last_string = *(char**) linkedlist_pop_back(&list); */
+    /* char* last_string = *(char**) list_pop_back(&list); */
 
-    linkedlist_free(&list);
+    list_free(&list);
 }
 
 void str_print(const void* s)

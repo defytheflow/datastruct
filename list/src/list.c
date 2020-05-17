@@ -1,4 +1,4 @@
-#include "../src/linkedlist.h"
+#include "../src/list.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -14,7 +14,7 @@ static void listnode_free(ListNode*, FreeFunc);
  *                                Construction.
  */
 
-LinkedList* linkedlist_create(LinkedList* list, size_t data_size, FreeFunc free_func)
+List* list_create(List* list, size_t data_size, FreeFunc free_func)
 {
     list->data_size = data_size;
     list->size = 0;
@@ -28,7 +28,7 @@ LinkedList* linkedlist_create(LinkedList* list, size_t data_size, FreeFunc free_
  *                                Destruction.
  */
 
-void linkedlist_free(LinkedList* list)
+void list_free(List* list)
 {
     ListNode *current_node;
 
@@ -43,9 +43,9 @@ void linkedlist_free(LinkedList* list)
  *                                  Indexing.
  */
 
-void* linkedlist_get(const LinkedList* list, size_t pos)
+void* list_get(const List* list, size_t pos)
 {
-    assert(pos < linkedlist_size(list));
+    assert(pos < list_size(list));
 
     ListNode* current_node = list->head;
 
@@ -55,9 +55,9 @@ void* linkedlist_get(const LinkedList* list, size_t pos)
     return current_node->data_ptr;
 }
 
-void linkedlist_set(const LinkedList* list, size_t pos, const void* data_ptr)
+void list_set(const List* list, size_t pos, const void* data_ptr)
 {
-    assert(pos < linkedlist_size(list));
+    assert(pos < list_size(list));
 
     ListNode* current_node = list->head;
 
@@ -71,11 +71,11 @@ void linkedlist_set(const LinkedList* list, size_t pos, const void* data_ptr)
  *                                 Insertion.
  */
 
-void linkedlist_push_back(LinkedList* list, const void* data_ptr)
+void list_push_back(List* list, const void* data_ptr)
 {
     ListNode *new_node = listnode_create(list->data_size, data_ptr);
 
-    if (linkedlist_is_empty(list))
+    if (list_is_empty(list))
         list->head = list->tail = new_node;
     else {
         list->tail->next = new_node;
@@ -85,7 +85,7 @@ void linkedlist_push_back(LinkedList* list, const void* data_ptr)
     ++list->size;
 }
 
-void linkedlist_push_front(LinkedList* list, const void* data_ptr)
+void list_push_front(List* list, const void* data_ptr)
 {
     ListNode *new_node = listnode_create(list->data_size, data_ptr);
 
@@ -98,9 +98,9 @@ void linkedlist_push_front(LinkedList* list, const void* data_ptr)
     ++list->size;
 }
 
-void linkedlist_insert(LinkedList* list, size_t pos, const void* data_ptr)
+void list_insert(List* list, size_t pos, const void* data_ptr)
 {
-    assert(pos < linkedlist_size(list));
+    assert(pos < list_size(list));
 
     ListNode* new_node = listnode_create(list->data_size, data_ptr);
     ListNode* current_node = list->head;
@@ -118,46 +118,39 @@ void linkedlist_insert(LinkedList* list, size_t pos, const void* data_ptr)
  *                                  Removal.
  */
 
-/* void* linkedlist_pop_back(LinkedList* list) */
+/* void* list_pop_back(List* list, void* data_out) */
 /* { */
-    /* assert(!linkedlist_is_empty(list)); */
+/*     assert(!list_is_empty(list)); */
 
-/*     ListNode* prev_node, current_node; */
-/*     void* data_ptr; */
+/*     ListNode* last_node = list->tail; */
+/*     memcpy(data_out, last_node->data_ptr, list->data_size); */
 
-/*     if (linkedlist_size(list) == 1) { */
-/*         --list->size; */
-/*         return list->head_node->data_ptr; */
-/*     } */
+/*     ListNode *current_node; */
 
-/*     current_node = list->head; */
-/*     data_ptr = NULL; */
 
-/*     while (current_node->next->next) */
-/*         current_node = current_node->next; */
+/*     list->tail = current_node; */
 
-/*     memcpy(data_ptr, current_node->data_ptr, list->data_size); */
-/*     listnode_free(current_node, list->free_func); */
+/*     listnode_free(last_node, NULL); */
 
-/*     return data_ptr; */
+/*     return data_out; */
 /* } */
 
-/* void* linkedlist_pop_front(LinkedList* list) { */
-/*     assert(!linkedlist_is_empty(list)); */
+/* void* list_pop_front(List* list) { */
+/*     assert(!list_is_empty(list)); */
 
 /* } */
 
-/* void linkedlist_erase(LinkedList* list, size_t pos); */
+/* void list_erase(List* list, size_t pos); */
 
 /*
  *                                   Printing.
  */
 
-void linkedlist_print(const LinkedList* list, PrintFunc print_func)
+void list_print(const List* list, PrintFunc print_func)
 {
     ListNode* current_node = list->head;
 
-    if (linkedlist_is_empty(list)) {
+    if (list_is_empty(list)) {
         puts("[]");
         return;
     }
