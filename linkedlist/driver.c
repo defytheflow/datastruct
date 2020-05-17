@@ -10,8 +10,8 @@ void str_free(void*);
 
 int main()
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), str_free);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), str_free);
 
     const char* strings[] = {
         "First",
@@ -26,16 +26,17 @@ int main()
 
     for(size_t i = 0; i < sizeof(strings) / sizeof(strings[0]); ++i) {
         string = strdup(strings[i]);
-        linkedlist_push_back(&ll, &string);
+        linkedlist_push_back(&list, &string);
     }
 
+    linkedlist_print(&list, str_print);
     /* char buffer[256]; */
 
-    /* linkedlist_pop_back(&ll, buffer); */
+    /* linkedlist_pop_back(&list, buffer); */
 
-    /* char* last_string = *(char**) linkedlist_pop_back(&ll); */
+    /* char* last_string = *(char**) linkedlist_pop_back(&list); */
 
-    linkedlist_free(&ll);
+    linkedlist_free(&list);
 }
 
 void str_print(const void* s)

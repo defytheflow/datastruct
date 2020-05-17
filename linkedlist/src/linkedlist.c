@@ -6,189 +6,168 @@
 #include <stdlib.h>
 #include <string.h>
 
-static struct LLNode* ll_node_init(size_t data_size, const void* data_ptr);
+static ListNode* listnode_create(size_t data_size, const void* data_ptr);
 
-static void ll_node_free(struct LLNode*, FreeFunc);
+static void listnode_free(ListNode*, FreeFunc);
 
 /*
  *                                Construction.
  */
 
-LinkedList* linkedlist_create(LinkedList* ll, size_t data_size, FreeFunc free_func)
+LinkedList* linkedlist_create(LinkedList* list, size_t data_size, FreeFunc free_func)
 {
-    ll->data_size = data_size;
-    ll->size = 0;
-    ll->free_func = (*free_func);
-    ll->head = NULL;
-    return ll;
+    list->data_size = data_size;
+    list->size = 0;
+    list->head = NULL;
+    list->tail = NULL;
+    list->free_func = (*free_func);
+    return list;
 }
 
 /*
  *                                Destruction.
  */
 
-void linkedlist_free(LinkedList* ll)
+void linkedlist_free(LinkedList* list)
 {
-    struct LLNode *curr_node, *temp;
+    ListNode *current_node;
 
-    if (linkedlist_is_empty(ll))
-        return;
-
-    curr_node = ll->head;
-
-    while (curr_node->next) {
-        temp = curr_node->next;
-        ll_node_free(curr_node, ll->free_func);
-        curr_node = temp;
+    while (list->head) {
+        current_node = list->head;
+        list->head = list->head->next;
+        listnode_free(current_node, list->free_func);
     }
-
-    ll_node_free(curr_node, ll->free_func);
 }
 
 /*
  *                                  Indexing.
  */
 
-void* linkedlist_get(const LinkedList* ll, size_t pos)
+void* linkedlist_get(const LinkedList* list, size_t pos)
 {
-    assert(pos < linkedlist_size(ll));
+    assert(pos < linkedlist_size(list));
 
-    struct LLNode* curr_node = ll->head;
+    ListNode* current_node = list->head;
 
-    for (size_t i = 0; i < pos; ++i, curr_node = curr_node->next)
+    for (size_t i = 0; i < pos; ++i, current_node = current_node->next)
         ;
 
-    return curr_node->data_ptr;
+    return current_node->data_ptr;
 }
 
-void linkedlist_set(const LinkedList* ll, size_t pos, const void* data_ptr)
+void linkedlist_set(const LinkedList* list, size_t pos, const void* data_ptr)
 {
-    assert(pos < linkedlist_size(ll));
+    assert(pos < linkedlist_size(list));
 
-    struct LLNode* curr_node = ll->head;
+    ListNode* current_node = list->head;
 
-    for (size_t i = 0; i < pos; ++i, curr_node = curr_node->next)
+    for (size_t i = 0; i < pos; ++i, current_node = current_node->next)
         ;
 
-    memcpy(curr_node->data_ptr, data_ptr, ll->data_size);
+    memcpy(current_node->data_ptr, data_ptr, list->data_size);
 }
 
 /*
  *                                 Insertion.
  */
 
-void linkedlist_push_back(LinkedList* ll, const void* data_ptr)
+void linkedlist_push_back(LinkedList* list, const void* data_ptr)
 {
-    struct LLNode *new_node, *curr_node;
+    ListNode *new_node = listnode_create(list->data_size, data_ptr);
 
-    new_node = ll_node_init(ll->data_size, data_ptr);
-
-    if (linkedlist_is_empty(ll)) {
-        ll->head = new_node;
-        ++ll->size;
-        return;
+    if (linkedlist_is_empty(list))
+        list->head = list->tail = new_node;
+    else {
+        list->tail->next = new_node;
+        list->tail = new_node;
     }
 
-    for (curr_node = ll->head; curr_node->next; curr_node = curr_node->next)
-        ;
-
-    curr_node->next = new_node;
-    ++ll->size;
+    ++list->size;
 }
 
-void linkedlist_push_front(LinkedList* ll, const void* data_ptr)
+void linkedlist_push_front(LinkedList* list, const void* data_ptr)
 {
-    struct LLNode *new_node, *temp_node;
+    ListNode *new_node = listnode_create(list->data_size, data_ptr);
 
-    new_node = ll_node_init(ll->data_size, data_ptr);
+    new_node->next = list->head;
+    list->head = new_node;
 
-    if (linkedlist_is_empty(ll)) {
-        ll->head = new_node;
-        ++ll->size;
-        return;
-    }
+    if (!list->tail)
+        list->tail = list->head;
 
-    temp_node = ll->head;
-    ll->head = new_node;
-    new_node->next = temp_node;
-
-    ++ll->size;
+    ++list->size;
 }
 
-void linkedlist_insert(LinkedList* ll, size_t pos, const void* data_ptr)
+void linkedlist_insert(LinkedList* list, size_t pos, const void* data_ptr)
 {
-    assert(pos < linkedlist_size(ll));
+    assert(pos < linkedlist_size(list));
 
-    struct LLNode *new_node, *curr_node, *temp_node;
+    ListNode* new_node = listnode_create(list->data_size, data_ptr);
+    ListNode* current_node = list->head;
 
-    new_node = ll_node_init(ll->data_size, data_ptr);
-    curr_node = ll->head;
-
-    for (size_t i = 0; i < pos - 1; ++i, curr_node = curr_node->next)
+    for (size_t i = 0; i < pos - 1; ++i, current_node = current_node->next)
         ;
 
-    temp_node = curr_node->next;
-    curr_node->next = new_node;
-    new_node->next = temp_node;
+    new_node->next = current_node->next;
+    current_node->next = new_node;
 
-    ++ll->size;
+    ++list->size;
 }
 
 /*
  *                                  Removal.
  */
 
-/* void* linkedlist_pop_back(LinkedList* ll) */
+/* void* linkedlist_pop_back(LinkedList* list) */
 /* { */
-/*     if (linkedlist_is_empty(ll)) */
-/*         return NULL; */
+    /* assert(!linkedlist_is_empty(list)); */
 
-/*     struct LLNode* prev_node, curr_node; */
+/*     ListNode* prev_node, current_node; */
 /*     void* data_ptr; */
 
-/*     if (linkedlist_size(ll) == 1) { */
-/*         --ll->size; */
-/*         return ll->head_node->data_ptr; */
+/*     if (linkedlist_size(list) == 1) { */
+/*         --list->size; */
+/*         return list->head_node->data_ptr; */
 /*     } */
 
-/*     curr_node = ll->head; */
+/*     current_node = list->head; */
 /*     data_ptr = NULL; */
 
-/*     while (curr_node->next->next) */
-/*         curr_node = curr_node->next; */
+/*     while (current_node->next->next) */
+/*         current_node = current_node->next; */
 
-/*     memcpy(data_ptr, curr_node->data_ptr, ll->data_size); */
-/*     ll_node_free(curr_node, ll->free_func); */
+/*     memcpy(data_ptr, current_node->data_ptr, list->data_size); */
+/*     listnode_free(current_node, list->free_func); */
 
 /*     return data_ptr; */
 /* } */
 
-/* void* linkedlist_pop_front(LinkedList* ll) { */
-/*     assert(!linkedlist_is_empty(ll)); */
+/* void* linkedlist_pop_front(LinkedList* list) { */
+/*     assert(!linkedlist_is_empty(list)); */
 
 /* } */
 
-/* void linkedlist_erase(LinkedList* ll, size_t pos); */
+/* void linkedlist_erase(LinkedList* list, size_t pos); */
 
 /*
  *                                   Printing.
  */
 
-void linkedlist_print(const LinkedList* ll, PrintFunc print_func)
+void linkedlist_print(const LinkedList* list, PrintFunc print_func)
 {
-    struct LLNode* curr_node = ll->head;
+    ListNode* current_node = list->head;
 
-    if (linkedlist_is_empty(ll)) {
+    if (linkedlist_is_empty(list)) {
         puts("[]");
         return;
     }
 
     printf("[");
-    while (curr_node) {
-        (*print_func)(curr_node->data_ptr);
-        if (curr_node->next)
+    while (current_node) {
+        (*print_func)(current_node->data_ptr);
+        if (current_node->next)
             printf(" -> ");
-        curr_node = curr_node->next;
+        current_node = current_node->next;
     }
     printf("]\n");
 }
@@ -197,9 +176,9 @@ void linkedlist_print(const LinkedList* ll, PrintFunc print_func)
  *                                  Internal.
  */
 
-static struct LLNode* ll_node_init(size_t data_size, const void* data_ptr)
+static ListNode* listnode_create(size_t data_size, const void* data_ptr)
 {
-    struct LLNode* new_node = malloc(sizeof(struct LLNode));
+    ListNode* new_node = malloc(sizeof(ListNode));
     assert(new_node);
 
     new_node->data_ptr = malloc(data_size);
@@ -211,7 +190,7 @@ static struct LLNode* ll_node_init(size_t data_size, const void* data_ptr)
     return new_node;
 }
 
-static void ll_node_free(struct LLNode* node, FreeFunc free_func)
+static void listnode_free(ListNode* node, FreeFunc free_func)
 {
     if (free_func)
         free_func(node->data_ptr);

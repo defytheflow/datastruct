@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-static size_t linkedlist_fill_with_strings(LinkedList* ll);
+static size_t linkedlist_filist_with_strings(LinkedList* list);
 
 /*
  *                                Construction.
@@ -13,15 +13,15 @@ static size_t linkedlist_fill_with_strings(LinkedList* ll);
 
 START_TEST(test_linkedlist_create)
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), NULL);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), NULL);
 
-    ck_assert_uint_eq(ll.data_size, sizeof(char*));
-    ck_assert_uint_eq(ll.size, 0);
-    ck_assert_ptr_eq(ll.free_func, NULL);
-    ck_assert_ptr_eq(ll.head, NULL);
+    ck_assert_uint_eq(list.data_size, sizeof(char*));
+    ck_assert_uint_eq(list.size, 0);
+    ck_assert_ptr_eq(list.free_func, NULL);
+    ck_assert_ptr_eq(list.head, NULL);
 
-    linkedlist_free(&ll);
+    linkedlist_free(&list);
 }
 END_TEST
 
@@ -31,13 +31,13 @@ END_TEST
 
 START_TEST(test_linkedlist_sizeof)
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), NULL);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), NULL);
 
-    size_t size = sizeof(LinkedList) + linkedlist_size(&ll) * sizeof(struct LLNode);
-    ck_assert_uint_eq(linkedlist_sizeof(&ll), size);
+    size_t size = sizeof(LinkedList) + linkedlist_size(&list) * sizeof(struct ListNode);
+    ck_assert_uint_eq(linkedlist_sizeof(&list), size);
 
-    linkedlist_free(&ll);
+    linkedlist_free(&list);
 }
 END_TEST
 
@@ -47,11 +47,11 @@ END_TEST
 
 START_TEST(test_linkedlist_size)
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), NULL);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), NULL);
 
-    ck_assert_uint_eq(linkedlist_size(&ll), 0);
-    linkedlist_free(&ll);
+    ck_assert_uint_eq(linkedlist_size(&list), 0);
+    linkedlist_free(&list);
 }
 END_TEST
 
@@ -61,14 +61,14 @@ END_TEST
 
 START_TEST(test_linkedlist_is_empty)
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), NULL);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), NULL);
 
-    ck_assert_uint_eq(linkedlist_is_empty(&ll), true);
-    linkedlist_fill_with_strings(&ll);
-    ck_assert_uint_eq(linkedlist_is_empty(&ll), false);
+    ck_assert_uint_eq(linkedlist_is_empty(&list), true);
+    linkedlist_filist_with_strings(&list);
+    ck_assert_uint_eq(linkedlist_is_empty(&list), false);
 
-    linkedlist_free(&ll);
+    linkedlist_free(&list);
 }
 END_TEST
 
@@ -78,31 +78,31 @@ END_TEST
 
 START_TEST(test_linkedlist_get)
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), NULL);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), NULL);
 
     const char* data = "Data";
-    linkedlist_push_back(&ll, &data);
+    linkedlist_push_back(&list, &data);
 
-    ck_assert_str_eq(*(char**) linkedlist_get(&ll, linkedlist_size(&ll) - 1), data);
+    ck_assert_str_eq(*(char**) linkedlist_get(&list, linkedlist_size(&list) - 1), data);
 
-    linkedlist_free(&ll);
+    linkedlist_free(&list);
 }
 END_TEST
 
 START_TEST(test_linkedlist_set)
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), NULL);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), NULL);
 
-    linkedlist_fill_with_strings(&ll);
+    linkedlist_filist_with_strings(&list);
 
     const char* data = "Data";
-    linkedlist_set(&ll, linkedlist_size(&ll) - 1, &data);
+    linkedlist_set(&list, linkedlist_size(&list) - 1, &data);
 
-    ck_assert_str_eq(*(char**) linkedlist_get(&ll, linkedlist_size(&ll) - 1), data);
+    ck_assert_str_eq(*(char**) linkedlist_get(&list, linkedlist_size(&list) - 1), data);
 
-    linkedlist_free(&ll);
+    linkedlist_free(&list);
 }
 END_TEST
 
@@ -112,52 +112,52 @@ END_TEST
 
 START_TEST(test_linkedlist_push_back)
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), NULL);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), NULL);
 
-    size_t num_strings = linkedlist_fill_with_strings(&ll);
+    size_t num_strings = linkedlist_filist_with_strings(&list);
 
     const char* data = "Data";
-    linkedlist_push_back(&ll, &data);
+    linkedlist_push_back(&list, &data);
 
-    ck_assert_uint_eq(linkedlist_size(&ll), num_strings + 1);
-    ck_assert_str_eq(*(char**) linkedlist_get(&ll, linkedlist_size(&ll) - 1), data);
+    ck_assert_uint_eq(linkedlist_size(&list), num_strings + 1);
+    ck_assert_str_eq(*(char**) linkedlist_get(&list, linkedlist_size(&list) - 1), data);
 
-    linkedlist_free(&ll);
+    linkedlist_free(&list);
 }
 END_TEST
 
 START_TEST(test_linkedlist_push_front)
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), NULL);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), NULL);
 
-    size_t num_strings = linkedlist_fill_with_strings(&ll);
+    size_t num_strings = linkedlist_filist_with_strings(&list);
 
     const char* data = "Data";
-    linkedlist_push_front(&ll, &data);
+    linkedlist_push_front(&list, &data);
 
-    ck_assert_uint_eq(linkedlist_size(&ll), num_strings + 1);
-    ck_assert_str_eq(*(char**) linkedlist_get(&ll, 0), data);
+    ck_assert_uint_eq(linkedlist_size(&list), num_strings + 1);
+    ck_assert_str_eq(*(char**) linkedlist_get(&list, 0), data);
 
-    linkedlist_free(&ll);
+    linkedlist_free(&list);
 }
 END_TEST
 
 START_TEST(test_linkedlist_insert)
 {
-    LinkedList ll;
-    linkedlist_create(&ll, sizeof(char*), NULL);
+    LinkedList list;
+    linkedlist_create(&list, sizeof(char*), NULL);
 
-    size_t num_strings = linkedlist_fill_with_strings(&ll);
+    size_t num_strings = linkedlist_filist_with_strings(&list);
 
     const char* data = "Data";
-    linkedlist_insert(&ll, num_strings / 2, &data);
+    linkedlist_insert(&list, num_strings / 2, &data);
 
-    ck_assert_uint_eq(linkedlist_size(&ll), num_strings + 1);
-    ck_assert_str_eq(*(char**) linkedlist_get(&ll, num_strings / 2), data);
+    ck_assert_uint_eq(linkedlist_size(&list), num_strings + 1);
+    ck_assert_str_eq(*(char**) linkedlist_get(&list, num_strings / 2), data);
 
-    linkedlist_free(&ll);
+    linkedlist_free(&list);
 }
 END_TEST
 
@@ -167,17 +167,17 @@ END_TEST
 
 /* START_TEST(test_linkedlist_pop_back) */
 /* { */
-    /* LinkedList ll; */
-    /* linkedlist_create(&ll, sizeof(char*), NULL); */
+    /* LinkedList list; */
+    /* linkedlist_create(&list, sizeof(char*), NULL); */
 
 /*     const char* data = "Data"; */
-/*     linkedlist_push_back(ll, &data); */
+/*     linkedlist_push_back(list, &data); */
 
-/*     ck_assert_uint_eq(linkedlist_size(ll), 1); */
-/*     ck_assert_str_eq(*(char**) linkedlist_pop_back(ll), data); */
-/*     ck_assert_uint_eq(linkedlist_size(ll), 0); */
+/*     ck_assert_uint_eq(linkedlist_size(list), 1); */
+/*     ck_assert_str_eq(*(char**) linkedlist_pop_back(list), data); */
+/*     ck_assert_uint_eq(linkedlist_size(list), 0); */
 
-    /* linkedlist_free(&ll); */
+    /* linkedlist_free(&list); */
 /* } */
 /* END_TEST */
 
@@ -226,7 +226,7 @@ int main(void)
     return 0;
 }
 
-static size_t linkedlist_fill_with_strings(LinkedList* ll)
+static size_t linkedlist_filist_with_strings(LinkedList* list)
 {
     static const char* strings[] = {
         "Very",
@@ -238,7 +238,7 @@ static size_t linkedlist_fill_with_strings(LinkedList* ll)
     };
 
     for (size_t i = 0; i < sizeof(strings) / sizeof(strings[0]); ++i)
-        linkedlist_push_back(ll, &strings[i]);
+        linkedlist_push_back(list, &strings[i]);
 
     return sizeof(strings) / sizeof(strings[0]);
 }
