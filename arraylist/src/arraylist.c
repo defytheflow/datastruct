@@ -23,7 +23,7 @@ static void swap(void*, void*, size_t);
  *                                Construction.
  */
 
-ArrayList* arraylist_init(size_t data_size, FreeFunc free_func)
+ArrayList* arraylist_create(size_t data_size, FreeFunc free_func)
 {
     ArrayList* al = (ArrayList*) malloc(sizeof(ArrayList));
     assert(al);

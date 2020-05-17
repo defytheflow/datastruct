@@ -11,7 +11,7 @@ void str_print(const void*);
 
 int main()
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_free(al);
 }

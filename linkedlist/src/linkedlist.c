@@ -18,7 +18,7 @@ static void ll_node_free(struct LLNode*, FreeFunc);
  *                                Construction.
  */
 
-LinkedList* linkedlist_init(size_t data_size, FreeFunc free_func)
+LinkedList* linkedlist_create(size_t data_size, FreeFunc free_func)
 {
     LinkedList* ll = malloc(sizeof(LinkedList));
     assert(ll);

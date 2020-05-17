@@ -12,9 +12,9 @@ static size_t linkedlist_fill_with_strings(LinkedList* ll);
  *                                Construction.
  */
 
-START_TEST(test_linkedlist_init)
+START_TEST(test_linkedlist_create)
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+    LinkedList* ll = linkedlist_create(sizeof(char*), NULL);
 
     ck_assert_uint_eq(ll->data_size, sizeof(char*));
     ck_assert_uint_eq(ll->size, 0);
@@ -31,7 +31,7 @@ END_TEST
 
 START_TEST(test_linkedlist_data_size)
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+    LinkedList* ll = linkedlist_create(sizeof(char*), NULL);
     ck_assert_uint_eq(linkedlist_data_size(ll), sizeof(char*));
     linkedlist_free(ll);
 }
@@ -39,7 +39,7 @@ END_TEST
 
 START_TEST(test_linkedlist_size)
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+    LinkedList* ll = linkedlist_create(sizeof(char*), NULL);
     ck_assert_uint_eq(linkedlist_size(ll), 0);
     linkedlist_free(ll);
 }
@@ -51,7 +51,7 @@ END_TEST
 
 START_TEST(test_linkedlist_is_empty)
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+    LinkedList* ll = linkedlist_create(sizeof(char*), NULL);
 
     ck_assert_uint_eq(linkedlist_is_empty(ll), true);
     linkedlist_fill_with_strings(ll);
@@ -67,7 +67,7 @@ END_TEST
 
 START_TEST(test_linkedlist_get)
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+    LinkedList* ll = linkedlist_create(sizeof(char*), NULL);
 
     const char* data = "Data";
     linkedlist_push_back(ll, &data);
@@ -80,7 +80,7 @@ END_TEST
 
 START_TEST(test_linkedlist_set)
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+    LinkedList* ll = linkedlist_create(sizeof(char*), NULL);
 
     linkedlist_fill_with_strings(ll);
 
@@ -99,7 +99,7 @@ END_TEST
 
 START_TEST(test_linkedlist_push_back)
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+    LinkedList* ll = linkedlist_create(sizeof(char*), NULL);
 
     size_t num_strings = linkedlist_fill_with_strings(ll);
 
@@ -115,7 +115,7 @@ END_TEST
 
 START_TEST(test_linkedlist_push_front)
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+    LinkedList* ll = linkedlist_create(sizeof(char*), NULL);
 
     size_t num_strings = linkedlist_fill_with_strings(ll);
 
@@ -131,7 +131,7 @@ END_TEST
 
 START_TEST(test_linkedlist_insert)
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), NULL);
+    LinkedList* ll = linkedlist_create(sizeof(char*), NULL);
 
     size_t num_strings = linkedlist_fill_with_strings(ll);
 
@@ -155,7 +155,7 @@ Suite *linkedlist_suite(void)
     TCase* tc_core = tcase_create("Core");
 
     /* Construction. */
-    tcase_add_test(tc_core, test_linkedlist_init);
+    tcase_add_test(tc_core, test_linkedlist_create);
 
     /* Field accessing. */
     tcase_add_test(tc_core, test_linkedlist_size);

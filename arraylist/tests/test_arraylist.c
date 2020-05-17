@@ -16,9 +16,9 @@ static int int_cmp(const void*, const void*);
  *                                Construction.
  */
 
-START_TEST(test_arraylist_init)
+START_TEST(test_arraylist_create)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     ck_assert_uint_eq(al->data_size, sizeof(int));
     ck_assert_uint_eq(al->size, 0);
@@ -35,7 +35,7 @@ END_TEST
 
 START_TEST(test_arraylist_data_size)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
     ck_assert_uint_eq(arraylist_data_size(al), sizeof(int));
     arraylist_free(al);
 }
@@ -43,7 +43,7 @@ END_TEST
 
 START_TEST(test_arraylist_size)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
     ck_assert_uint_eq(arraylist_size(al), 0);
     arraylist_free(al);
 }
@@ -51,7 +51,7 @@ END_TEST
 
 START_TEST(test_arraylist_capacity)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
     ck_assert_uint_eq(arraylist_capacity(al), INIT_CAPACITY);
     arraylist_free(al);
 }
@@ -63,7 +63,7 @@ END_TEST
 
 START_TEST(test_arraylist_is_empty)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     ck_assert_uint_eq(arraylist_is_empty(al), true);
     arraylist_fill_up_to(al, 100);
@@ -75,7 +75,7 @@ END_TEST
 
 START_TEST(test_arraylist_is_full)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al, INIT_CAPACITY);
     ck_assert_uint_eq(arraylist_is_full(al), true);
@@ -86,7 +86,7 @@ END_TEST
 
 START_TEST(test_arraylist_is_sorted)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al, 100);
     ck_assert_uint_eq(arraylist_is_sorted(al, int_cmp), true);
@@ -101,7 +101,7 @@ END_TEST
 
 START_TEST(test_arraylist_get)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     int data = 24;
     arraylist_push_back(al, &data);
@@ -114,7 +114,7 @@ END_TEST
 
 START_TEST(test_arraylist_set)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     int data = 24;
     arraylist_push_back(al, &data);
@@ -134,8 +134,8 @@ END_TEST
 
 START_TEST(test_arraylist_concat)
 {
-    ArrayList* al1 = arraylist_init(sizeof(int), NULL);
-    ArrayList* al2 = arraylist_init(sizeof(int), NULL);
+    ArrayList* al1 = arraylist_create(sizeof(int), NULL);
+    ArrayList* al2 = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al1, SIZE);
     arraylist_fill_up_to(al2, SIZE);
@@ -157,8 +157,8 @@ END_TEST
 
 START_TEST(test_arraylist_equals)
 {
-    ArrayList* al1 = arraylist_init(sizeof(int), NULL);
-    ArrayList* al2 = arraylist_init(sizeof(int), NULL);
+    ArrayList* al1 = arraylist_create(sizeof(int), NULL);
+    ArrayList* al2 = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al1, SIZE);
     arraylist_fill_up_to(al2, SIZE);
@@ -181,7 +181,7 @@ END_TEST
 
 START_TEST(test_arraylist_push_back)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     int data = 24;
     arraylist_push_back(al, &data);
@@ -195,7 +195,7 @@ END_TEST
 
 START_TEST(test_arraylist_insert)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al, SIZE);
 
@@ -215,7 +215,7 @@ END_TEST
 
 START_TEST(test_arraylist_pop)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al, SIZE);
     int last_elem = *(int*) arraylist_get(al, arraylist_size(al) - 1);
@@ -227,7 +227,7 @@ END_TEST
 
 START_TEST(test_arraylist_erase)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al, SIZE);
 
@@ -248,7 +248,7 @@ END_TEST
 
 START_TEST(test_arraylist_resize)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al, SIZE);
 
@@ -267,7 +267,7 @@ END_TEST
 START_TEST(test_arraylist_shrink_to_fit)
 {
 
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al, SIZE);
     al = arraylist_shrink_to_fit(al);
@@ -280,7 +280,7 @@ END_TEST
 
 START_TEST(test_arraylist_clear)
 {
-    ArrayList* al = arraylist_init(sizeof(int), NULL);
+    ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al, SIZE);
     al = arraylist_clear(al);
@@ -297,8 +297,8 @@ END_TEST
 
 START_TEST(test_arraylist_reverse)
 {
-    ArrayList* al1 = arraylist_init(sizeof(int), NULL);
-    ArrayList* al2 = arraylist_init(sizeof(int), NULL);
+    ArrayList* al1 = arraylist_create(sizeof(int), NULL);
+    ArrayList* al2 = arraylist_create(sizeof(int), NULL);
 
     for (int i = 0; i <= SIZE; ++i)
         arraylist_push_back(al1, &i);
@@ -321,7 +321,7 @@ Suite *arraylist_suite(void)
     TCase* tc_core = tcase_create("Core");
 
     /* Construction. */
-    tcase_add_test(tc_core, test_arraylist_init);
+    tcase_add_test(tc_core, test_arraylist_create);
 
     /* Field accessing. */
     tcase_add_test(tc_core, test_arraylist_data_size);

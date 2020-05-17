@@ -26,7 +26,7 @@ typedef struct {
  * Construction.
  */
 
-ArrayList* arraylist_init(size_t data_size, FreeFunc);
+ArrayList* arraylist_create(size_t data_size, FreeFunc);
 
 /*
  * Destruction.

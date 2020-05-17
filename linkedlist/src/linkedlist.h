@@ -27,7 +27,7 @@ typedef struct {
  * Construction.
  */
 
-LinkedList* linkedlist_init(size_t data_size, FreeFunc);
+LinkedList* linkedlist_create(size_t data_size, FreeFunc);
 
 /*
  * Destruction.

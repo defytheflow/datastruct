@@ -11,7 +11,7 @@ void str_free(void*);
 
 int main()
 {
-    LinkedList* ll = linkedlist_init(sizeof(char*), str_free);
+    LinkedList* ll = linkedlist_create(sizeof(char*), str_free);
 
     const char* strings[] = {
         "First",
