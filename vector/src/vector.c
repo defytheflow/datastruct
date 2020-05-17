@@ -23,17 +23,14 @@ static void swap(void*, void*, size_t);
  *                                Construction.
  */
 
-Vector* vector_create(size_t data_size, FreeFunc free_func)
+Vector* vector_create(Vector* v, size_t data_size, FreeFunc free_func)
 {
-    Vector* v = (Vector*) malloc(sizeof(Vector));
-    assert(v);
-
     v->data_size = data_size;
     v->size = 0;
     v->capacity = INIT_CAPACITY;
     v->free_func = (*free_func);
-
     v->buffer_ptr = malloc(v->data_size * v->capacity);
+    memset(v->buffer_ptr, 0, INIT_CAPACITY);
     assert(v->buffer_ptr);
 
     return v;
@@ -50,7 +47,6 @@ void vector_free(Vector* v)
             v->free_func(vector_get_internal(v, i));
     }
     free(v->buffer_ptr);
-    free(v);
 }
 
 /*
@@ -160,16 +156,19 @@ void vector_erase(Vector* v, size_t pos)
  *                                   Resize.
  */
 
-Vector* vector_resize(Vector* v, size_t new_size)
+Vector* vector_resize(Vector* v, size_t new_capacity)
 {
-    return (v->capacity < new_size) ?
-        vector_grow_buffer_by(v, new_size - v->capacity) :
-        vector_shrink_buffer_by(v, v->capacity - new_size);
+    if (vector_capacity(v) == new_capacity)
+        return v;
+
+    return (v->capacity < new_capacity) ?
+        vector_grow_buffer_by(v, new_capacity - v->capacity) :
+        vector_shrink_buffer_by(v, v->capacity - new_capacity);
 }
 
 Vector* vector_shrink_to_fit(Vector* v)
 {
-    return vector_resize(v, v->size);
+    return (v->size != v->capacity) ? vector_resize(v, v->size) : v;
 }
 
 Vector* vector_clear(Vector* v)
@@ -177,13 +176,11 @@ Vector* vector_clear(Vector* v)
     if (vector_is_empty(v))
         return v;
 
-    if (v->size <= INIT_CAPACITY) {
-        v->size = 0;
-        return v;
-    }
-
     v->size = 0;
-    return vector_resize(v, INIT_CAPACITY);
+    memset(v->buffer_ptr, 0, INIT_CAPACITY);
+    vector_resize(v, INIT_CAPACITY);
+
+    return v;
 }
 
 /*
@@ -247,6 +244,7 @@ static Vector* vector_grow_buffer_by(Vector* v, size_t n)
 
     v->buffer_ptr = realloc(v->buffer_ptr, v->capacity * v->data_size);
     assert(v->buffer_ptr);
+    memset(v->buffer_ptr + vector_size(v) * v->data_size, 0, n);
 
     return v;
 }

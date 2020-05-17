@@ -26,7 +26,7 @@ typedef struct {
  * Construction.
  */
 
-Vector* vector_create(size_t data_size, FreeFunc);
+Vector* vector_create(Vector* v, size_t data_size, FreeFunc);
 
 /*
  * Destruction.
@@ -35,13 +35,8 @@ Vector* vector_create(size_t data_size, FreeFunc);
 void vector_free(Vector* v);
 
 /*
- * Field Accessing.
+ * Size/Capacity.
  */
-
-static inline size_t vector_data_size(const Vector* v)
-{
-    return v->data_size;
-}
 
 static inline size_t vector_size(const Vector* v)
 {
@@ -56,7 +51,7 @@ static inline size_t vector_capacity(const Vector* v)
 // TODO add buffer_ptr access (for qsort, lsearch, e.c.).
 
 /*
- * State.
+ * Emptiness/Fullness.
  */
 
 static inline bool vector_is_empty(const Vector* v)
@@ -102,7 +97,7 @@ void vector_push_back(Vector* v, const void* data_ptr);
 void vector_insert(Vector* v, size_t pos, const void* data_ptr);
 
 /*
- * Removv.
+ * Remove.
  */
 
 void* vector_pop_back(Vector* v);
@@ -113,7 +108,7 @@ void vector_erase(Vector* v, size_t pos);
  * Resize.
  */
 
-Vector* vector_resize(Vector* v, size_t new_size);
+Vector* vector_resize(Vector* v, size_t new_capacity);
 
 Vector* vector_shrink_to_fit(Vector* v);
 

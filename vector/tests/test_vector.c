@@ -5,11 +5,8 @@
 #include <stdbool.h>
 
 #define INIT_CAPACITY  4
-#define NOT_FOUND     -1
-#define SIZE          100
 
 static void vector_fill_up_to(Vector* v, int limit);
-
 static int int_cmp(const void*, const void*);
 
 /*
@@ -18,80 +15,82 @@ static int int_cmp(const void*, const void*);
 
 START_TEST(test_vector_create)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    ck_assert_uint_eq(v->data_size, sizeof(int));
-    ck_assert_uint_eq(v->size, 0);
-    ck_assert_uint_eq(v->capacity, 4);
-    ck_assert_ptr_eq(v->free_func, NULL);
+    ck_assert_uint_eq(v.data_size, sizeof(int));
+    ck_assert_uint_eq(v.size, 0);
+    ck_assert_uint_eq(v.capacity, INIT_CAPACITY);
+    ck_assert_ptr_eq(v.free_func, NULL);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
 /*
- *                              Field Accessing.
+ *                               Size/Capacity.
  */
-
-START_TEST(test_vector_data_size)
-{
-    Vector* v = vector_create(sizeof(int), NULL);
-    ck_assert_uint_eq(vector_data_size(v), sizeof(int));
-    vector_free(v);
-}
-END_TEST
 
 START_TEST(test_vector_size)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
-    ck_assert_uint_eq(vector_size(v), 0);
-    vector_free(v);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
+
+    ck_assert_uint_eq(vector_size(&v), 0);
+
+    vector_free(&v);
 }
 END_TEST
 
 START_TEST(test_vector_capacity)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
-    ck_assert_uint_eq(vector_capacity(v), INIT_CAPACITY);
-    vector_free(v);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
+
+    ck_assert_uint_eq(vector_capacity(&v), INIT_CAPACITY);
+
+    vector_free(&v);
 }
 END_TEST
 
 /*
- *                                   State.
+ *                             Emptiness/Fullness.
  */
 
 START_TEST(test_vector_is_empty)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    ck_assert_uint_eq(vector_is_empty(v), true);
-    vector_fill_up_to(v, 100);
-    ck_assert_uint_eq(vector_is_empty(v), false);
+    ck_assert_uint_eq(vector_is_empty(&v), true);
+    vector_fill_up_to(&v, 100);
+    ck_assert_uint_eq(vector_is_empty(&v), false);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
 START_TEST(test_vector_is_full)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    vector_fill_up_to(v, INIT_CAPACITY);
-    ck_assert_uint_eq(vector_is_full(v), true);
+    vector_fill_up_to(&v, INIT_CAPACITY);
+    ck_assert_uint_eq(vector_is_full(&v), true);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
 START_TEST(test_vector_is_sorted)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    vector_fill_up_to(v, 100);
-    ck_assert_uint_eq(vector_is_sorted(v, int_cmp), true);
+    vector_fill_up_to(&v, 100);
+    ck_assert_uint_eq(vector_is_sorted(&v, int_cmp), true);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
@@ -101,30 +100,32 @@ END_TEST
 
 START_TEST(test_vector_get)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
     int data = 24;
-    vector_push_back(v, &data);
+    vector_push_back(&v, &data);
 
-    ck_assert_int_eq(*(int*) vector_get(v, 0), data);
+    ck_assert_int_eq(*(int*) vector_get(&v, 0), data);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
 START_TEST(test_vector_set)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
     int data = 24;
-    vector_push_back(v, &data);
+    vector_push_back(&v, &data);
 
     int new_data = 25;
-    vector_set(v, 0, &new_data);
+    vector_set(&v, 0, &new_data);
 
-    ck_assert_int_eq(*(int*) vector_get(v, 0), new_data);
+    ck_assert_int_eq(*(int*) vector_get(&v, 0), new_data);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
@@ -134,20 +135,21 @@ END_TEST
 
 START_TEST(test_vector_concat)
 {
-    Vector* v1 = vector_create(sizeof(int), NULL);
-    Vector* v2 = vector_create(sizeof(int), NULL);
+    Vector v1, v2;
+    vector_create(&v1, sizeof(int), NULL);
+    vector_create(&v2, sizeof(int), NULL);
 
-    vector_fill_up_to(v1, SIZE);
-    vector_fill_up_to(v2, SIZE);
+    vector_fill_up_to(&v1, 100);
+    vector_fill_up_to(&v2, 100);
 
-    v1 = vector_concat(v1, v2);
-    ck_assert_int_eq(vector_size(v1), SIZE + SIZE);
+    vector_concat(&v1, &v2);
+    ck_assert_int_eq(vector_size(&v1), 200);
 
-    for (int i = 0, j = SIZE; j < SIZE; ++i, ++j)
-        ck_assert_int_eq(*(int*) vector_get(v1, j), *(int*) vector_get(v2, i));
+    for (int i = 0, j = 100; j < 100; ++i, ++j)
+        ck_assert_int_eq(*(int*) vector_get(&v1, j), *(int*) vector_get(&v2, i));
 
-    vector_free(v1);
-    vector_free(v2);
+    vector_free(&v1);
+    vector_free(&v2);
 }
 END_TEST
 
@@ -157,21 +159,22 @@ END_TEST
 
 START_TEST(test_vector_equals)
 {
-    Vector* v1 = vector_create(sizeof(int), NULL);
-    Vector* v2 = vector_create(sizeof(int), NULL);
+    Vector v1, v2;
+    vector_create(&v1, sizeof(int), NULL);
+    vector_create(&v2, sizeof(int), NULL);
 
-    vector_fill_up_to(v1, SIZE);
-    vector_fill_up_to(v2, SIZE);
+    vector_fill_up_to(&v1, 100);
+    vector_fill_up_to(&v2, 100);
 
-    ck_assert_int_eq(vector_equals(v1, v2, int_cmp), true);
+    ck_assert_int_eq(vector_equals(&v1, &v2, int_cmp), true);
 
     int data = 24;
-    vector_push_back(v1, &data);
+    vector_push_back(&v1, &data);
 
-    ck_assert_int_eq(vector_equals(v1, v2, int_cmp), false);
+    ck_assert_int_eq(vector_equals(&v1, &v2, int_cmp), false);
 
-    vector_free(v1);
-    vector_free(v2);
+    vector_free(&v1);
+    vector_free(&v2);
 }
 END_TEST
 
@@ -181,31 +184,33 @@ END_TEST
 
 START_TEST(test_vector_push_back)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
     int data = 24;
-    vector_push_back(v, &data);
+    vector_push_back(&v, &data);
 
-    ck_assert_uint_eq(vector_size(v), 1);
-    ck_assert_int_eq(*(int*) vector_get(v, 0), data);
+    ck_assert_uint_eq(vector_size(&v), 1);
+    ck_assert_int_eq(*(int*) vector_get(&v, 0), data);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
 START_TEST(test_vector_insert)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    vector_fill_up_to(v, SIZE);
+    vector_fill_up_to(&v, 100);
 
     int data = 24;
-    vector_insert(v, 5, &data);
+    vector_insert(&v, 5, &data);
 
-    ck_assert_uint_eq(vector_size(v), SIZE + 1);
-    ck_assert_int_eq(*(int*) vector_get(v, 5), data);
+    ck_assert_uint_eq(vector_size(&v), 101);
+    ck_assert_int_eq(*(int*) vector_get(&v, 5), data);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
@@ -215,30 +220,33 @@ END_TEST
 
 START_TEST(test_vector_pop_back)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    vector_fill_up_to(v, SIZE);
-    int last_elem = *(int*) vector_get(v, vector_size(v) - 1);
-    ck_assert_int_eq(*(int*) vector_pop_back(v), last_elem);
+    vector_fill_up_to(&v, 100);
 
-    vector_free(v);
+    int last_elem = *(int*) vector_get(&v, vector_size(&v) - 1);
+    ck_assert_int_eq(*(int*) vector_pop_back(&v), last_elem);
+
+    vector_free(&v);
 }
 END_TEST
 
 START_TEST(test_vector_erase)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    vector_fill_up_to(v, SIZE);
+    vector_fill_up_to(&v, 100);
 
-    int data = *(int*) vector_get(v, 2);
+    int data = *(int*) vector_get(&v, 2);
 
-    vector_erase(v, 2);
+    vector_erase(&v, 2);
 
-    ck_assert_int_eq(vector_size(v), SIZE - 1);
-    ck_assert_int_ne(*(int*) vector_get(v, 2), data);
+    ck_assert_int_eq(vector_size(&v), 99);
+    ck_assert_int_ne(*(int*) vector_get(&v, 2), data);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
@@ -248,46 +256,51 @@ END_TEST
 
 START_TEST(test_vector_resize)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    vector_fill_up_to(v, SIZE);
+    vector_fill_up_to(&v, 100);
 
-    v = vector_resize(v, 1000);
-    ck_assert_uint_eq(vector_capacity(v), 1000);
+    vector_resize(&v, 1000);
+    ck_assert_uint_eq(vector_capacity(&v), 1000);
 
-    v = vector_resize(v, 10);
+    vector_resize(&v, 10);
 
-    ck_assert_uint_eq(vector_capacity(v), 10);
-    ck_assert_uint_eq(vector_size(v), 10);
+    ck_assert_uint_eq(vector_capacity(&v), 10);
+    ck_assert_uint_eq(vector_size(&v), 10);
 
-    vector_free(v);
+    vector_free(&v);
 }
 END_TEST
 
 START_TEST(test_vector_shrink_to_fit)
 {
 
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    vector_fill_up_to(v, SIZE);
-    v = vector_shrink_to_fit(v);
-    ck_assert_uint_eq(vector_size(v), vector_capacity(v));
+    vector_fill_up_to(&v, 100);
 
-    vector_free(v);
+    vector_shrink_to_fit(&v);
+    ck_assert_uint_eq(vector_size(&v), vector_capacity(&v));
+
+    vector_free(&v);
 
 }
 END_TEST
 
 START_TEST(test_vector_clear)
 {
-    Vector* v = vector_create(sizeof(int), NULL);
+    Vector v;
+    vector_create(&v, sizeof(int), NULL);
 
-    vector_fill_up_to(v, SIZE);
-    v = vector_clear(v);
-    ck_assert_uint_eq(vector_size(v), 0);
-    ck_assert_uint_eq(vector_capacity(v), INIT_CAPACITY);
+    vector_fill_up_to(&v, 100);
 
-    vector_free(v);
+    vector_clear(&v);
+    ck_assert_uint_eq(vector_size(&v), 0);
+    ck_assert_uint_eq(vector_capacity(&v), INIT_CAPACITY);
+
+    vector_free(&v);
 }
 END_TEST
 
@@ -297,21 +310,22 @@ END_TEST
 
 START_TEST(test_vector_reverse)
 {
-    Vector* v1 = vector_create(sizeof(int), NULL);
-    Vector* v2 = vector_create(sizeof(int), NULL);
+    Vector v1, v2;
+    vector_create(&v1, sizeof(int), NULL);
+    vector_create(&v2, sizeof(int), NULL);
 
-    for (int i = 0; i <= SIZE; ++i)
-        vector_push_back(v1, &i);
+    for (int i = 0; i <= 100; ++i)
+        vector_push_back(&v1, &i);
 
-    for (int i = SIZE; i >= 0; --i) {
-        vector_push_back(v2, &i);
+    for (int i = 100; i >= 0; --i) {
+        vector_push_back(&v2, &i);
     }
 
-    v2 = vector_reverse(v2);
-    ck_assert_int_eq(vector_equals(v1, v2, int_cmp), true);
+    vector_reverse(&v2);
+    ck_assert_int_eq(vector_equals(&v1, &v2, int_cmp), true);
 
-    vector_free(v1);
-    vector_free(v2);
+    vector_free(&v1);
+    vector_free(&v2);
 }
 END_TEST
 
@@ -324,7 +338,6 @@ Suite *vector_suite(void)
     tcase_add_test(tc_core, test_vector_create);
 
     /* Field accessing. */
-    tcase_add_test(tc_core, test_vector_data_size);
     tcase_add_test(tc_core, test_vector_size);
     tcase_add_test(tc_core, test_vector_capacity);
 
@@ -351,10 +364,12 @@ Suite *vector_suite(void)
     tcase_add_test(tc_core, test_vector_pop_back);
     tcase_add_test(tc_core, test_vector_erase);
 
+    /* Resize. */
     tcase_add_test(tc_core, test_vector_resize);
     tcase_add_test(tc_core, test_vector_shrink_to_fit);
     tcase_add_test(tc_core, test_vector_clear);
 
+    /* Reversion. */
     tcase_add_test(tc_core, test_vector_reverse);
 
     suite_add_tcase(s, tc_core);
