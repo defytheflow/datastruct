@@ -1,4 +1,4 @@
-#include "src/arraylist.h"
+#include "src/vector.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,9 +11,9 @@ void str_print(const void*);
 
 int main()
 {
-    ArrayList* al = arraylist_create(sizeof(int), NULL);
+    Vector* v = vector_create(sizeof(int), NULL);
 
-    arraylist_free(al);
+    vector_free(v);
 }
 
 int int_cmp(const void* a_ptr, const void* b_ptr)

@@ -4,16 +4,16 @@ TEST_LIBS = -lcheck -lm -lpthread -lrt -lsubunit
 
 default: driver
 
-test: test_arraylist
+test: test_vector
 
-arraylist.o: src/arraylist.c
+vector.o: src/vector.c
 	$(CC) -c $(CFLAGS) $^
 
-driver: driver.c arraylist.o
+driver: driver.c vector.o
 	$(CC) $(CFLAGS) $^ -o $@
 
-test_arraylist: tests/test_arraylist.c arraylist.o
+test_vector: tests/test_vector.c vector.o
 	$(CC) $(CFLAGS) $^ $(TEST_LIBS) -o $@
 
 clean:
-	$(RM) *.o test_arraylist driver
+	$(RM) *.o test_vector driver
