@@ -140,7 +140,7 @@ void arraylist_insert(ArrayList* al, size_t pos, const void* data_ptr)
  *                                  Removal.
  */
 
-void* arraylist_pop(ArrayList* al)
+void* arraylist_pop_back(ArrayList* al)
 {
     assert(!(arraylist_is_empty(al)));
     return arraylist_get_internal(al, --al->size);

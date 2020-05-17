@@ -14,20 +14,23 @@ typedef int(*CmpFunc)(const void*, const void*);
 
 typedef void(*PrintFunc)(const void*);
 
-typedef struct LLNode LLNode;
+struct LLNode {
+    void* data_ptr;
+    struct LLNode* next;
+};
 
 typedef struct {
     size_t data_size;
     size_t size;
     FreeFunc free_func;
-    LLNode* head;
+    struct LLNode* head;
 } LinkedList;
 
 /*
  * Construction.
  */
 
-LinkedList* linkedlist_create(size_t data_size, FreeFunc);
+LinkedList* linkedlist_create(LinkedList* ll, size_t data_size, FreeFunc);
 
 /*
  * Destruction.
@@ -36,13 +39,8 @@ LinkedList* linkedlist_create(size_t data_size, FreeFunc);
 void linkedlist_free(LinkedList*);
 
 /*
- * Field Accessing.
+ * Size.
  */
-
-static inline size_t linkedlist_data_size(const LinkedList* ll)
-{
-    return ll->data_size;
-}
 
 static inline size_t linkedlist_size(const LinkedList* ll)
 {
@@ -50,7 +48,16 @@ static inline size_t linkedlist_size(const LinkedList* ll)
 }
 
 /*
- * State.
+ * Sizeof.
+ */
+
+static inline size_t linkedlist_sizeof(const LinkedList* ll)
+{
+    return sizeof(LinkedList) + linkedlist_size(ll) * sizeof(struct LLNode);
+}
+
+/*
+ * Emptiness.
  */
 
 static inline bool linkedlist_is_empty(const LinkedList* ll)
@@ -80,7 +87,11 @@ void linkedlist_insert(LinkedList* ll, size_t pos, const void* data_ptr);
  * Removal.
  */
 
-// TODO.
+void* linkedlist_pop_back(LinkedList* ll);
+
+void* linkedlist_pop_front(LinkedList* ll);
+
+void linkedlist_erase(LinkedList* ll, size_t pos);
 
 /*
  * Printing.

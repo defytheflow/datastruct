@@ -6,28 +6,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct LLNode {
-    void* data_ptr;
-    struct LLNode* next;
-};
-
 static struct LLNode* ll_node_init(size_t data_size, const void* data_ptr);
+
 static void ll_node_free(struct LLNode*, FreeFunc);
 
 /*
  *                                Construction.
  */
 
-LinkedList* linkedlist_create(size_t data_size, FreeFunc free_func)
+LinkedList* linkedlist_create(LinkedList* ll, size_t data_size, FreeFunc free_func)
 {
-    LinkedList* ll = malloc(sizeof(LinkedList));
-    assert(ll);
-
     ll->data_size = data_size;
     ll->size = 0;
     ll->free_func = (*free_func);
     ll->head = NULL;
-
     return ll;
 }
 
@@ -39,10 +31,8 @@ void linkedlist_free(LinkedList* ll)
 {
     struct LLNode *curr_node, *temp;
 
-    if (linkedlist_is_empty(ll)) {
-        free(ll);
+    if (linkedlist_is_empty(ll))
         return;
-    }
 
     curr_node = ll->head;
 
@@ -53,7 +43,6 @@ void linkedlist_free(LinkedList* ll)
     }
 
     ll_node_free(curr_node, ll->free_func);
-    free(ll);
 }
 
 /*
@@ -149,7 +138,37 @@ void linkedlist_insert(LinkedList* ll, size_t pos, const void* data_ptr)
  *                                  Removal.
  */
 
-// TODO.
+/* void* linkedlist_pop_back(LinkedList* ll) */
+/* { */
+/*     if (linkedlist_is_empty(ll)) */
+/*         return NULL; */
+
+/*     struct LLNode* prev_node, curr_node; */
+/*     void* data_ptr; */
+
+/*     if (linkedlist_size(ll) == 1) { */
+/*         --ll->size; */
+/*         return ll->head_node->data_ptr; */
+/*     } */
+
+/*     curr_node = ll->head; */
+/*     data_ptr = NULL; */
+
+/*     while (curr_node->next->next) */
+/*         curr_node = curr_node->next; */
+
+/*     memcpy(data_ptr, curr_node->data_ptr, ll->data_size); */
+/*     ll_node_free(curr_node, ll->free_func); */
+
+/*     return data_ptr; */
+/* } */
+
+/* void* linkedlist_pop_front(LinkedList* ll) { */
+/*     assert(!linkedlist_is_empty(ll)); */
+
+/* } */
+
+/* void linkedlist_erase(LinkedList* ll, size_t pos); */
 
 /*
  *                                   Printing.

@@ -213,13 +213,13 @@ END_TEST
  *                                  Removal.
  */
 
-START_TEST(test_arraylist_pop)
+START_TEST(test_arraylist_pop_back)
 {
     ArrayList* al = arraylist_create(sizeof(int), NULL);
 
     arraylist_fill_up_to(al, SIZE);
     int last_elem = *(int*) arraylist_get(al, arraylist_size(al) - 1);
-    ck_assert_int_eq(*(int*) arraylist_pop(al), last_elem);
+    ck_assert_int_eq(*(int*) arraylist_pop_back(al), last_elem);
 
     arraylist_free(al);
 }
@@ -348,7 +348,7 @@ Suite *arraylist_suite(void)
     tcase_add_test(tc_core, test_arraylist_insert);
 
     /* Removal. */
-    tcase_add_test(tc_core, test_arraylist_pop);
+    tcase_add_test(tc_core, test_arraylist_pop_back);
     tcase_add_test(tc_core, test_arraylist_erase);
 
     tcase_add_test(tc_core, test_arraylist_resize);
